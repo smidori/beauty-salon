@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor //por algumas razão, dá erro na criação do bean
 public class UserService {
     private final UserRepository userRepository; //initialized by Spring @AllArgsConstructor
-
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
     public Iterable<User> findAll() {
         return userRepository.findAll();
     }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 //@Configuration
 //@EntityScan(basePackages = {"com.cct.beautysalon.model"})  // force scan JPA entities
-@EnableJpaRepositories
+@EnableJpaRepositories("com.cct.beautysalon.repositories")
 @EntityScan("com.cct.beautysalon.models")
 @SpringBootApplication
 public class BeautySalonApplication {
