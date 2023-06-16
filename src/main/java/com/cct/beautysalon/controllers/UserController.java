@@ -3,12 +3,17 @@ package com.cct.beautysalon.controllers;
 import com.cct.beautysalon.DTO.UserDTO;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.services.UserService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @AllArgsConstructor
 @RestController
@@ -25,6 +30,12 @@ public class UserController {
     //convert the DTO to entity
     private User toEntity(UserDTO userDTO) {
         return mapper.map(userDTO, User.class);
+    }
+    @GetMapping
+    public List<UserDTO> getUsers() {
+        var users = StreamSupport.stream(userService.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+        return users.stream().map(this::toDTO).toList();
     }
 
     /**

@@ -16,8 +16,8 @@ public class CorsConfig {
     CorsFilter corsFilter(){
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); //browser should send credentials sucha as cookies with cross origin requests
-        config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        //config.setAllowedHeaders(Collections.singletonList("*"));//accept all headers
+        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost"));
+        config.setAllowedHeaders(Collections.singletonList("*"));//accept all headers
         //config.setExposedHeaders(Collections.singletonList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 

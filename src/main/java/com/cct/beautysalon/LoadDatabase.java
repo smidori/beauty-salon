@@ -19,7 +19,8 @@ public class LoadDatabase {
         return args -> {
             LOG.info("Add user to database");
 
-            userRepository.save(new User("Silvia", "smidori", "test","smidori@gmail.com", UserType.CLIENT));
+            userRepository.save(new User("Silvia", "Shimabuko", "smidori", "test","smidori@gmail.com", UserType.CLIENT));
+            userRepository.save(new User("Test", "Dev", "test", "test","test@gmail.com", UserType.WORKER));
         };
     }
 }

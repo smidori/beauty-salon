@@ -15,8 +15,9 @@ import lombok.*;
 public class User {
 
 
-	public User(String name, String login, String password, String email, UserType type) {
-		this.name = name;
+	public User(String firstName, String lastName, String login, String password, String email, UserType type) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.login = login;
 		this.password = password;
 		this.email = email;
@@ -27,14 +28,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-    //@Column(length = 50, nullable = false)
-	@NotNull(message = "Name is required")
-	private String name;
+	@Column(name = "first_name", length = 30, nullable = false)
+	@NotNull(message = "First is required")
+	private String firstName;
+
+	@Column(name = "last_name", length = 30, nullable = false)
+	@NotNull(message = "Last is required")
+	private String lastName;
 
 	@Column
+	@NotNull(message = "Login is required")
 	private String login;
 
 	@Column
+	@NotNull(message = "Password is required")
 	private String password;
 
 	@Column(length = 100, nullable = false)
