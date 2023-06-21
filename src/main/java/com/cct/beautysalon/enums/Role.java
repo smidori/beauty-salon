@@ -1,6 +1,5 @@
 package com.cct.beautysalon.enums;
 
-public enum UserType {
+public enum Role {
     ADMIN, CLIENT, WORKER
-
 }

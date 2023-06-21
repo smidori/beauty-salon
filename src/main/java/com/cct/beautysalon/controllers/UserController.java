@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+//@CrossOrigin(allowedHeaders = "Content-Type")
+//@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     private final ModelMapper mapper;

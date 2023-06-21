@@ -1,0 +1,30 @@
+package com.cct.beautysalon.services;
+
+import com.cct.beautysalon.exceptions.NotFoundException;
+import com.cct.beautysalon.models.TreatmentType;
+import com.cct.beautysalon.repositories.TreatmentTypeRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TreatmentTypeService {
+    private final TreatmentTypeRepository treatmentTypeRepository;
+
+    public TreatmentTypeService(TreatmentTypeRepository treatmentTypeRepository) {
+        this.treatmentTypeRepository = treatmentTypeRepository;
+    }
+
+    public Iterable<TreatmentType> findAll() {
+        return treatmentTypeRepository.findAll();
+    }
+
+    public TreatmentType findTreatmentTypeById(Long id) {
+        return treatmentTypeRepository.findById(id)
+                .orElseThrow(
+                        () -> new NotFoundException("Treatment Type by id "+ id+" not found"));
+    }
+
+    public TreatmentType save(TreatmentType treatmentType) {
+        return treatmentTypeRepository.save(treatmentType);
+    }
+
+}

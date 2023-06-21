@@ -1,27 +1,34 @@
 package com.cct.beautysalon.models;
 
 
-import com.cct.beautysalon.enums.UserType;
+import com.cct.beautysalon.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+@Builder
 @ToString(exclude = {"password"})
 @Data //getters and setters
 @NoArgsConstructor //Without args constructor
 @AllArgsConstructor //with all args constructor
 @Entity
 @Table(name="user")
-public class User {
+public class User implements UserDetails {
 
 
-	public User(String firstName, String lastName, String login, String password, String email, UserType type) {
+	public User(String firstName, String lastName, String login, String password, String email, Role role) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.login = login;
 		this.password = password;
 		this.email = email;
-		this.type = type;
+		this.role = role;
 	}
 
 	@Id
@@ -48,6 +55,36 @@ public class User {
 	private String email;
 
 	@Enumerated(EnumType.STRING) // save the string value
-	private UserType type;
+	private Role role; //TODO  private Set<Role> roles;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority(role.name()));
+	}
+
+	@Override
+	public String getUsername() {
+		return login; //this is our username
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
 }
