@@ -27,8 +27,8 @@ public class LoadDatabase {
 
             //userRepository.save(new User("Silvia", "Shimabuko", "smidori", "test","smidori@gmail.com", Role.CLIENT));
             //userRepository.save(new User("Test", "Dev", "test", "test","test@gmail.com", Role.WORKER));
-            userRepository.save(new User("aaa", "bbb", "admin", "$2a$10$SFpBn1tw/0buJA5OhwJvPeltclKhnom72Tu.WC7dLzpKu75m3OjOu","smidori@gmail.com", Role.ADMIN));
-            userRepository.save(new User("ccc", "ddd", "client", "$2a$10$cc2sW4BvfJMHsCATGktQ2OC9kCYt2.ckTr1AOg4gheza28Su0yBge","smidori@gmail.com", Role.CLIENT));
+            userRepository.save(new User("aaa", "bbb", "admin", "$2a$10$SFpBn1tw/0buJA5OhwJvPeltclKhnom72Tu.WC7dLzpKu75m3OjOu","smidori@gmail.com", Role.ADMIN,"female"));
+            userRepository.save(new User("ccc", "ddd", "client", "$2a$10$cc2sW4BvfJMHsCATGktQ2OC9kCYt2.ckTr1AOg4gheza28Su0yBge","smidori@gmail.com", Role.CLIENT,"female"));
 
 
             LOG.info("Add treatments type to database");

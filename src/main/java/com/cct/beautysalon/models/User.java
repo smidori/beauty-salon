@@ -22,13 +22,14 @@ import java.util.Set;
 public class User implements UserDetails {
 
 
-	public User(String firstName, String lastName, String login, String password, String email, Role role) {
+	public User(String firstName, String lastName, String login, String password, String email, Role role, String gender) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.login = login;
 		this.password = password;
 		this.email = email;
 		this.role = role;
+		this.gender = gender;
 	}
 
 	@Id
@@ -56,6 +57,8 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING) // save the string value
 	private Role role; //TODO  private Set<Role> roles;
+
+	private String gender;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
