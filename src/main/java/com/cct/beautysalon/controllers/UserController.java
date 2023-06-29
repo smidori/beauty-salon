@@ -59,6 +59,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable("id") Long id) {
+        System.out.println("getUserById => " + id);
         return toDTO(userService.findUserById(id));
     }
 

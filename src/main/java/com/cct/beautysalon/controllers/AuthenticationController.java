@@ -18,18 +18,18 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
+    @PostMapping("/register")
+    public ResponseEntity<JwtAuthenticationResponse> register(@RequestBody SignUpRequest request) {
         System.out.println("request -----------> " + request);
-        var test = ResponseEntity.ok(authenticationService.signup(request));
+        var test = ResponseEntity.ok(authenticationService.register(request));
         System.out.println("auth signup -----------> " + test);
         return test;
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
+    @PostMapping("/login")
+    public ResponseEntity<JwtAuthenticationResponse> login(@RequestBody SigninRequest request) {
         System.out.println("request -----------> " + request);
-        var test = ResponseEntity.ok(authenticationService.signin(request));
+        var test = ResponseEntity.ok(authenticationService.login(request));
         System.out.println("auth signin -----------> " + test);
         return test;
     }

@@ -7,12 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @Data //getters and setters
 @NoArgsConstructor //Without args constructor
 @AllArgsConstructor //with all args constructor
 @Entity
 @Table
-public class Treatment {
+public class Treatment{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +27,23 @@ public class Treatment {
 
     private double price;
 
+    private int duration;
+
     @ManyToOne
     @JoinColumn(name = "treatment_type_id")
     private TreatmentType type;
 
-    public Treatment(String name, String description, TreatmentType type, double price) {
+    @ManyToMany(mappedBy = "treatments", fetch = FetchType.EAGER)
+    private Set<Availability> availabilities;
+
+    public Treatment(String name, String description, TreatmentType type, double price, int duration) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.type = type;
+        this.duration = duration;
     }
+
+
+
 }

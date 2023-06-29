@@ -16,10 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 //@AllArgsConstructor //por algumas razão, dá erro na criação do bean
 public class UserService {
-    private final UserRepository userRepository; //initialized by Spring @AllArgsConstructor
-//    public UserService(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
+    private final UserRepository userRepository;
     public Iterable<User> findAll() {
         return userRepository.findAll();
     }

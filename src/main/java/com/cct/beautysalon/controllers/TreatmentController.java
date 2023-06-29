@@ -6,10 +6,9 @@ import com.cct.beautysalon.services.TreatmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,11 +36,29 @@ public class TreatmentController {
         return treatments.stream().map(this::toDTO).toList();
     }
 
-
+    @PostMapping
     public TreatmentDTO save(@Valid @RequestBody TreatmentDTO treatmentDTO) {
         Treatment treatment = toEntity(treatmentDTO);
         Treatment saved = treatmentService.save(treatment);
         return toDTO(saved);
     }
 
+    @GetMapping("/{id}")
+    public TreatmentDTO getTreatmentById(@PathVariable("id") Long id) {
+        return toDTO(treatmentService.findTreatmentById(id));
+    }
+
+    @PutMapping("/{id}")
+    public void update(@PathVariable("id") Long id, @Valid @RequestBody TreatmentDTO treatmentDTO) {
+        if(!id.equals(treatmentDTO.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Treatment id doesn't match");
+        }
+        Treatment treatment = toEntity(treatmentDTO);
+        treatmentService.update(id, treatment);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        treatmentService.delete(id);
+    }
 }
