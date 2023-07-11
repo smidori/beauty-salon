@@ -35,6 +35,13 @@ public class AvailabilityController {
     public List<AvailabilityDTO> getAvailabilities() {
         var availabilities = StreamSupport.stream(availabilityService.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+
+        // Print treatments before conversion
+        availabilities.forEach(availability -> {
+            System.out.println("Availability ID: " + availability.getId());
+            availability.getTreatments().forEach(treatment -> System.out.println("Treatment ID: " + treatment.getId()));
+        });
+
         return availabilities.stream().map(this::toDTO).toList();
     }
 

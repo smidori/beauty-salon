@@ -56,7 +56,7 @@ public class LoadDatabase {
             treatmentRepository.save(new Treatment("Manicure","regular", nails, 15,30));
             treatmentRepository.save(new Treatment("Manicure","BIAB nails with shellac", nails, 22, 30));
             treatmentRepository.save(new Treatment("Pedicure","regular", nails, 20, 60));
-            treatmentRepository.save(new Treatment("Manicure","BIAB nails with shellac", nails, 25, 60));
+            treatmentRepository.save(new Treatment("Pedicure","BIAB nails with shellac", nails, 25, 60));
             treatmentRepository.save(new Treatment("senior haircut","ladies haircut and blowdry", ladiesTreats, 50, 45));
             treatmentRepository.save(new Treatment("expert haircut","ladies haircut and blowdry", ladiesTreats, 55, 60));
             treatmentRepository.save(new Treatment("haircut","gents haircut", maleTreats, 25, 30));
@@ -71,12 +71,24 @@ public class LoadDatabase {
 
             LOG.info("Add availability to database");
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date dateStart = (Date) dateFormat.parse("31/10/2022");
+            Date dateStart = (Date) dateFormat.parse("23/5/2023");
+            //List<Treatment> w1Treatments = new ArrayList<>();
             Set<Treatment> w1Treatments = new HashSet<>();
             w1Treatments.add(treatment5);
             w1Treatments.add(treatment6);
 
+            //List<Treatment> w2Treatments = new ArrayList<>();
+            Set<Treatment> w2Treatments = new HashSet<>();
+            w2Treatments.add(treatment5);
+            //w2Treatments.add(treatment6);
+
             avaialabilityRepository.save(new Availability(w1Treatments,userWorker1,true,true,true,true,true,true,false,dateStart,null,
+                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
+                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
+                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
+                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
+
+            avaialabilityRepository.save(new Availability(w2Treatments,userWorker2,true,false,true,false,true,true,false,dateStart,null,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),

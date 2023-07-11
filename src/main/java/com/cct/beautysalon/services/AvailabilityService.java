@@ -13,6 +13,7 @@ public class AvailabilityService {
 
     public Iterable<Availability> findAll() {
         return availabilityRepository.findAll();
+        //return availabilityRepository.findAllWithTreatments();
     }
 
     public Availability findAvailabilityById(Long id) {
