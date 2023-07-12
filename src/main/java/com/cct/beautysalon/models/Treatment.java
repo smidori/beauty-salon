@@ -36,14 +36,11 @@ public class Treatment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private String description;
-
     private double price;
-
     private int duration;
+
 
     @ManyToOne
     @JoinColumn(name = "treatment_type_id")

@@ -21,7 +21,7 @@ public class TreatmentDTO {
     private String description;
     private TreatmentType type;
     private int duration;
-    private Set<Availability> availabilities;
+    private Set<AvailabilityDTO> availabilities;
 
     @Override
     public boolean equals(Object o) {

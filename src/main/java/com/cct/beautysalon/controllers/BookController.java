@@ -73,7 +73,7 @@ public class BookController {
 //    public BookDTO getBookById(@PathVariable("id") Long id) {
 //        return toDTO(bookService.findBookById(id));
 //    }
-    @GetMapping("/availability")
+    @PostMapping("/availability")
     public Map<String, BookAvailableDTO> getBookAvailable(@RequestBody BookSearchParamsDTO bookSearchParams) {
         //public BookSearchParamsDTO getBookAvailable() {
         //Book book = bookService.findBookById(id);
@@ -83,7 +83,12 @@ public class BookController {
         //Date dateBook = new Date();
         LocalDate dateBook = LocalDate.now(); //Get the date choosen by the user
         long idTreatment = bookSearchParams.getTreatment().getId();
-        Long idUser = bookSearchParams.getUser().getId();
+        Long idUser = null;
+
+        if(bookSearchParams.getUser() != null){
+            idUser = bookSearchParams.getUser().getId();
+        }
+
         int duration = bookSearchParams.getTreatment().getDuration();
 
         List<Availability> availabilities = availabilityService.findByTreatmentId(idTreatment);
