@@ -82,17 +82,25 @@ public class LoadDatabase {
             w2Treatments.add(treatment5);
             //w2Treatments.add(treatment6);
 
-            avaialabilityRepository.save(new Availability(w1Treatments,userWorker1,true,true,true,true,true,true,false,dateStart,null,
-                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
-                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
+            avaialabilityRepository.save(new Availability(w1Treatments,userWorker1,dateStart,null,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
 
-            avaialabilityRepository.save(new Availability(w2Treatments,userWorker2,true,false,true,false,true,true,false,dateStart,null,
-                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
-                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
+            avaialabilityRepository.save(new Availability(w2Treatments,userWorker2, dateStart,null,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
+
+//            avaialabilityRepository.save(new Availability(w1Treatments,userWorker1,true,true,true,true,true,true,false,dateStart,null,
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
+//
+//            avaialabilityRepository.save(new Availability(w2Treatments,userWorker2,true,false,true,false,true,true,false,dateStart,null,
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
+//                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
         };
     }
 }

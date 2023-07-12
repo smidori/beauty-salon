@@ -77,7 +77,7 @@ public class BookController {
     public Map<String, BookAvailableDTO> getBookAvailable(@RequestBody BookSearchParamsDTO bookSearchParams) {
         //public BookSearchParamsDTO getBookAvailable() {
         //Book book = bookService.findBookById(id);
-        Set<BookAvailableDTO> bookAvailableSorted = new TreeSet<>();
+
         Map<String, BookAvailableDTO> bookAvailable = new HashMap<>();
 
         //Date dateBook = new Date();
