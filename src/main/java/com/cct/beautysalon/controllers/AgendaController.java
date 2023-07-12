@@ -78,6 +78,7 @@ public class AgendaController {
 
         LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
 
+
         LocalDateTime currentDateTime = LocalDateTime.of(startDate, startTime);
 
 

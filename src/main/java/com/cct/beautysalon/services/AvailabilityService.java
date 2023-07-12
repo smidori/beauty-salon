@@ -6,6 +6,8 @@ import com.cct.beautysalon.repositories.AvailabilityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AvailabilityService {
@@ -39,4 +41,9 @@ public class AvailabilityService {
                 .orElseThrow(
                         () -> new NotFoundException("Availability by id: " + id + "was not found"));
     }
+
+    public List<Availability> findByTreatmentId(long treatmentId){
+        return availabilityRepository.findByTreatmentId(treatmentId);
+    }
+
 }
