@@ -3,14 +3,21 @@ package com.cct.beautysalon.services;
 import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Agenda;
 import com.cct.beautysalon.models.Book;
+import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
+    private final UserLoggedService userLoggedService;
 
     public Iterable<Book> findAll() {
         return bookRepository.findAll();
@@ -21,6 +28,13 @@ public class BookService {
     }
 
     public Book save(Book book) {
+        System.out.println("+++++++++++++++++++ book save+++++++++++++++++++++++++++++");
+        User userLogged = userLoggedService.getUserLogged();
+        System.out.println("Dados do usuário logado: " + userLogged.getId() + userLogged.getFirstName());
+        book.setClientUser(userLogged);
+        book.setCreatedDate(LocalDateTime.now());
+        System.out.println("Dados userLogged: " + userLogged);
+        System.out.println("Dados booking: " + book);
         return bookRepository.save(book);
     }
 
@@ -38,5 +52,9 @@ public class BookService {
         return bookRepository.findById(id)
                 .orElseThrow(
                         () -> new NotFoundException("Book by id: " + id + "was not found"));
+    }
+
+    public List<Book> findByWorkerUserId(Long workerUserId, LocalDate dateBook) {
+        return bookRepository.findByWorkerUserIdAndDateBook(workerUserId, dateBook);
     }
 }

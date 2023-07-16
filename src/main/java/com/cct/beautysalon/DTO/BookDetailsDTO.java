@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -18,9 +20,11 @@ public class BookDetailsDTO implements Comparable<BookDetailsDTO>{
     private long userId;
     private String userName;
     //private Treatment treatment;
-    private Date dateBook;
-    private Time startTimeBook;
-    private Time finishTimeBook;
+    private LocalDate dateBook;
+
+    private LocalTime startTimeBook;
+
+    private LocalTime finishTimeBook;
 
 //    @Override
 //    public int compareTo(BookDetailsDTO o) {

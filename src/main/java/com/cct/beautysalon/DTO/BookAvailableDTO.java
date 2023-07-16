@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -15,20 +17,16 @@ import java.util.Set;
 @Data
 @Builder
 public class BookAvailableDTO implements Comparable<BookAvailableDTO>{
-    private Date dateBook;
-    private Time startTimeBook;
-    private Time finishTimeBook;
+    private LocalDate dateBook;
+
+    private LocalTime startTimeBook;
+
+    private LocalTime finishTimeBook;
     private Set<BookDetailsDTO> bookDetails;
 
     @Override
     public int compareTo(BookAvailableDTO o) {
-        if(o.getStartTimeBook().after(this.startTimeBook)){
-            return 1;
-        }else if(o.getStartTimeBook().before(this.startTimeBook)){
-            return -1;
-        }else{
-            return 0;
-        }
+        return o.startTimeBook.compareTo(startTimeBook);
     }
 
     @Override

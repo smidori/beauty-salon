@@ -1,15 +1,15 @@
 package com.cct.beautysalon.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-
+import java.time.LocalTime;
 
 @Builder
 @Data //getters and setters
@@ -27,22 +27,34 @@ public class Book {
     @JoinColumn(name = "availability_id")
     private Availability availability;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "treatment_id")
     private Treatment treatment;
 
-    private LocalDateTime dateOfAgenda;
+    //private LocalDateTime dateOfAgenda;
+    @NotNull
+    private LocalDate dateBook;
 
-    @Column
-    private Date dateBook;
+    @NotNull
+    private LocalTime startTimeBook;
 
-    @Column
-    private Time startTimeBook;
+    @NotNull
+    private LocalTime finishTimeBook;
 
-    @Column
-    private Time finishTimeBook;
-
-    @Column
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "client_user_id")
     private User clientUser;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "worker_user_id")
+    private User workerUser;
+
+    @NotNull
+    private LocalDateTime createdDate;
+
+
+    private LocalDateTime updatedDate;
 }
