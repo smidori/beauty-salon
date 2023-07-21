@@ -65,6 +65,10 @@ public class User implements UserDetails {
 		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
 
+	/**
+	 * Configure which field will be used as username
+	 * @return
+	 */
 	@Override
 	public String getUsername() {
 		return login; //this is our username

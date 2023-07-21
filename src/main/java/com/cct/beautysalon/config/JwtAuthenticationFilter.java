@@ -32,22 +32,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("******************************** doFilterInternal " + request);
+
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String userEmail;
-        System.out.println("******************************** authHeader " + authHeader);
+        final String userName;
+
+        //if is empty, do the authentication
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
+        //otherwise get the token and check
         jwt = authHeader.substring(7);
-        System.out.println("***************------------------ jwt ========> " + jwt);
-        userEmail = jwtService.extractUserName(jwt);
-        if (StringUtils.isNotEmpty(userEmail)
+        userName = jwtService.extractUserName(jwt);
+
+        if (StringUtils.isNotEmpty(userName)
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userEmail);
+            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userName);
             System.out.println("Authentication filter userDetails: " + userDetails);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();

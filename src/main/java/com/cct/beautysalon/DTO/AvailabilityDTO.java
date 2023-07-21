@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -28,8 +29,8 @@ public class AvailabilityDTO {
 //    private Boolean saturday;
 //    private Boolean sunday;
 
-    private Date startDate;
-    private Date finishDate;
+    private LocalDate startDate;
+    private LocalDate finishDate;
 
 //    private Time lunchstarttime;
 //    private Time lunchendtime;

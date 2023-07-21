@@ -1,13 +1,17 @@
 package com.cct.beautysalon.controllers;
 
 import com.cct.beautysalon.DTO.UserDTO;
+import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
+import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
 import com.cct.beautysalon.services.UserService;
+import com.cct.beautysalon.utils.ErrorResponse;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -46,10 +50,14 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public UserDTO save(@Valid @RequestBody UserDTO userDTO) {
-        User user = toEntity(userDTO);
-        User userSaved = userService.save(user);
-        return toDTO(userSaved);
+    public ResponseEntity<Object> save(@Valid @RequestBody UserDTO userDTO) {
+        try {
+            User user = toEntity(userDTO);
+            User userSaved = userService.save(user);
+            return ResponseEntity.ok(toDTO(userSaved));
+        }catch (UsernameRegisteredException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+        }
     }
 
     /**

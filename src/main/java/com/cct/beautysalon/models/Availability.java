@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.*;
 
 @Data //getters and setters
@@ -31,7 +32,7 @@ public class Availability{
         return Objects.hash(id, user, startDate, finishDate, hourStartTime, hourFinishTime);
     }
 
-    public Availability(Set<Treatment> treatments, User user, Date startDate, Date finishDate, Time hourStartTime, Time hourFinishTime) {
+    public Availability(Set<Treatment> treatments, User user, LocalDate startDate, LocalDate finishDate, Time hourStartTime, Time hourFinishTime) {
         this.treatments = treatments;
         this.user = user;
         this.startDate = startDate;
@@ -93,9 +94,9 @@ public class Availability{
 //    private Boolean sunday;
 
     @Column
-    private Date startDate;
+    private LocalDate startDate;
     @Column
-    private Date finishDate;
+    private LocalDate finishDate;
 
 //    @Column
 //    private Time lunchstarttime;

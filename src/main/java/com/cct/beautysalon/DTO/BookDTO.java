@@ -25,9 +25,16 @@ public class BookDTO {
     private LocalDateTime dateOfAgenda;
     //private Treatment treatment;
     private Long treatmentId;
+
     private LocalDate dateBook;
     private LocalTime startTimeBook;
     private LocalTime finishTimeBook;
     private Long workerUserId;
-    //private UserDTO clientUser;
+
+    private String treatmentName;
+    private String workerUserFirstName;
+    private String workerUserLastName;
+    private Long clientUserId;
+    private String clientUserFirstName;
+    private String clientUserLastName;
 }

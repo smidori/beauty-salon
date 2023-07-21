@@ -6,6 +6,7 @@ import com.cct.beautysalon.models.Book;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ public class BookService {
     private final UserLoggedService userLoggedService;
 
     public Iterable<Book> findAll() {
-        return bookRepository.findAll();
+        Sort sort = Sort.by("dateBook", "workerUser.id", "startTimeBook").ascending();
+        return bookRepository.findAll(sort);
     }
 
     public Book findBookById(Long id) {

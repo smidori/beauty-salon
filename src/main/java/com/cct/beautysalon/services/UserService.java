@@ -1,6 +1,7 @@
 package com.cct.beautysalon.services;
 
 import com.cct.beautysalon.exceptions.NotFoundException;
+import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,10 @@ public class UserService {
     }
 
     public User save(User user) {
+        var userRegistered = userRepository.findByLogin(user.getLogin());
+        if(userRegistered.isPresent()){
+            throw new UsernameRegisteredException();
+        }
         return userRepository.save(user);
     }
 
@@ -56,10 +61,8 @@ public class UserService {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) {
-                System.out.println("-------------------------------------->UserService loadUserByUsername " + username);
                 var user = userRepository.findByLogin(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-                System.out.println("-------------------------------------->UserService user " + user);
                 return user;
             }
         };

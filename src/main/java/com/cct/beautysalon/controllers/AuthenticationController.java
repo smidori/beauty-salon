@@ -1,8 +1,14 @@
 package com.cct.beautysalon.controllers;
+
+import com.cct.beautysalon.exceptions.AuthenticationException;
+import com.cct.beautysalon.exceptions.BadCredentialsException;
+import com.cct.beautysalon.exceptions.UsernameRegisteredException;
+import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
 import com.cct.beautysalon.models.jwt.SignUpRequest;
 import com.cct.beautysalon.models.jwt.SigninRequest;
 import com.cct.beautysalon.services.AuthenticationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,19 +24,35 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
+    /**
+     * This api is used to register the client
+     * @param request
+     * @return
+     */
     @PostMapping("/register")
     public ResponseEntity<JwtAuthenticationResponse> register(@RequestBody SignUpRequest request) {
-        System.out.println("request -----------> " + request);
-        var test = ResponseEntity.ok(authenticationService.register(request));
-        System.out.println("auth signup -----------> " + test);
-        return test;
+        try {
+            var response = authenticationService.register(request);
+            return ResponseEntity.ok(response);
+        }catch (UsernameRegisteredException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new JwtAuthenticationResponse(null, null, e.getMessage()));
+        }
     }
 
+    /**
+     * Endpoint for authenticating
+     * @param request
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity<JwtAuthenticationResponse> login(@RequestBody SigninRequest request) {
-        System.out.println("request -----------> " + request);
-        var test = ResponseEntity.ok(authenticationService.login(request));
-        System.out.println("auth signin -----------> " + test);
-        return test;
+        try {
+            var response = authenticationService.login(request);
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JwtAuthenticationResponse(null, null, e.getMessage()));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new JwtAuthenticationResponse(null, null, e.getMessage()));
+        }
     }
 }
