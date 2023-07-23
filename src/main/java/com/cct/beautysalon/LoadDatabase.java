@@ -45,11 +45,14 @@ public class LoadDatabase {
             String password1 = "123";
             String encoderPWD = passwordEncoder.encode(password1);
             //userRepository.save(new User("aaa", "bbb", "admin", "$2a$10$SFpBn1tw/0buJA5OhwJvPeltclKhnom72Tu.WC7dLzpKu75m3OjOu","smidori@gmail.com", Role.ADMIN,"female"));
-            userRepository.save(new User("admin", "admin", "admin", encoderPWD,"smidori@gmail.com", Role.ADMIN,"female"));
-            userRepository.save(new User("Jamie", "MacQuillan", "jam", encoderPWD,"smidori@gmail.com", Role.WORKER,"male"));
-            userRepository.save(new User("Zoe", "Broderick", "zoe", encoderPWD,"smidori@gmail.com", Role.WORKER,"female"));
-            userRepository.save(new User("Patrick", "Sullivan", "pat", encoderPWD,"smidori@gmail.com", Role.WORKER,"male"));
-            userRepository.save(new User("Penelope", "Morrison", "pen", encoderPWD,"smidori@gmail.com", Role.WORKER,"female"));
+            userRepository.save(new User("admin", "admin", "admin", encoderPWD,"smidori@gmail.com", Role.ADMIN,"female","+353(83)1231211"));
+            userRepository.save(new User("Jamie", "MacQuillan", "jam", encoderPWD,"smidori@gmail.com", Role.WORKER,"male","+353(82)1231212"));
+            userRepository.save(new User("Zoe", "Broderick", "zoe", encoderPWD,"smidori@gmail.com", Role.WORKER,"female","+353(85)1231213"));
+            userRepository.save(new User("Patrick", "Sullivan", "pat", encoderPWD,"smidori@gmail.com", Role.WORKER,"male","+353(87)1231214"));
+            userRepository.save(new User("Penelope", "Morrison", "pen", encoderPWD,"smidori@gmail.com", Role.WORKER,"female","+353(88)1231215"));
+            userRepository.save(new User("Catarine", "Morrison", "cat", encoderPWD,"smidori@gmail.com", Role.CLIENT,"female","+353(88)1231112"));
+            userRepository.save(new User("John", "Willis", "john", encoderPWD,"smidori@gmail.com", Role.CLIENT,"male","+353(88)1231115"));
+
             User userWorker1 = userRepository.findById(2L).get();
             User userWorker2 = userRepository.findById(3L).get();
             User userWorker3 = userRepository.findById(4L).get();

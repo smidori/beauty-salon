@@ -1,6 +1,7 @@
 package com.cct.beautysalon.DTO;
 
 import com.cct.beautysalon.enums.Role;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,9 @@ public class UserDTO {
     private String email;
     private Role role;
     private String gender;
+    private String mobilePhone;
+    private String homePhone;
+
 
     public UserDTO(Long id, String firstName, String lastName) {
         this.id = id;

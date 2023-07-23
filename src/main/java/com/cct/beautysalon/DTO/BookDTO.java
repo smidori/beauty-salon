@@ -1,5 +1,6 @@
 package com.cct.beautysalon.DTO;
 
+import com.cct.beautysalon.enums.BookStatus;
 import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.models.Treatment;
 import com.cct.beautysalon.models.User;
@@ -37,4 +38,7 @@ public class BookDTO {
     private Long clientUserId;
     private String clientUserFirstName;
     private String clientUserLastName;
+    private BookStatus status;
+    private String observation;
+    private LocalDateTime createdDate;
 }

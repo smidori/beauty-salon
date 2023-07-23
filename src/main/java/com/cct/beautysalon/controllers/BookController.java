@@ -4,6 +4,7 @@ import com.cct.beautysalon.DTO.BookAvailableDTO;
 import com.cct.beautysalon.DTO.BookDTO;
 import com.cct.beautysalon.DTO.BookDetailsDTO;
 import com.cct.beautysalon.DTO.BookSearchParamsDTO;
+import com.cct.beautysalon.enums.BookStatus;
 import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.models.Book;
 import com.cct.beautysalon.services.AvailabilityService;
@@ -11,7 +12,9 @@ import com.cct.beautysalon.services.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,7 +43,10 @@ public class BookController {
 
     //convert the DTO to entity
     private Book toEntity(BookDTO bookDTO) {
-        return mapper.map(bookDTO, Book.class);
+        Book book = mapper.map(bookDTO, Book.class);
+        //book.setStatus(BookStatus.valueOf(bookDTO.getStatus()));
+
+        return book;
     }
 
     //TODO: FILTRAR OS BOOKS DO USUÁRIO QUANDO FOR CLIENT E ADMIN TRAZER TODOS E WORKER TRAZER OS SEUS PRÓPRIOS
@@ -208,14 +214,14 @@ public class BookController {
      * @param id
      * @param bookDTO
      */
-//    @PutMapping("/{id}")
-//    public void update(@PathVariable("id") Long id, @Valid @RequestBody BookDTO bookDTO) {
-//        if (!id.equals(bookDTO.getId())) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book id doesn't match");
-//        }
-//        Book book = toEntity(bookDTO);
-//        bookService.update(id, book);
-//    }
+    @PutMapping("/{id}")
+    public void update(@PathVariable("id") Long id, @Valid @RequestBody BookDTO bookDTO) {
+        if (!id.equals(bookDTO.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book id doesn't match");
+        }
+        Book book = toEntity(bookDTO);
+        bookService.update(id, book);
+    }
 
     /**
      * Delete a Book

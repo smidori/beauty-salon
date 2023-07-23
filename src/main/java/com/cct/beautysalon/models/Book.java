@@ -1,5 +1,6 @@
 package com.cct.beautysalon.models;
 
+import com.cct.beautysalon.enums.BookStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -55,6 +56,11 @@ public class Book {
     @NotNull
     private LocalDateTime createdDate;
 
-
     private LocalDateTime updatedDate;
+
+    @Enumerated(EnumType.STRING)
+    private BookStatus status;
+
+    private String observation;
+
 }

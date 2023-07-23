@@ -22,7 +22,7 @@ import java.util.Set;
 public class User implements UserDetails {
 
 
-	public User(String firstName, String lastName, String login, String password, String email, Role role, String gender) {
+	public User(String firstName, String lastName, String login, String password, String email, Role role, String gender, String mobilePhone) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.login = login;
@@ -30,6 +30,7 @@ public class User implements UserDetails {
 		this.email = email;
 		this.role = role;
 		this.gender = gender;
+		this.mobilePhone = mobilePhone;
 	}
 
 	@Id
@@ -59,6 +60,11 @@ public class User implements UserDetails {
 	private Role role; //TODO  private Set<Role> roles;
 
 	private String gender;
+
+	@NotNull
+	private String mobilePhone;
+
+	private String homePhone;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

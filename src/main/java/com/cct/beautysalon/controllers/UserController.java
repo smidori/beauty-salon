@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +26,7 @@ import java.util.stream.StreamSupport;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final ModelMapper mapper;
 
@@ -52,6 +54,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Object> save(@Valid @RequestBody UserDTO userDTO) {
         try {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             User user = toEntity(userDTO);
             User userSaved = userService.save(user);
             return ResponseEntity.ok(toDTO(userSaved));

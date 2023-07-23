@@ -4,19 +4,19 @@ import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 //@AllArgsConstructor //por algumas razão, dá erro na criação do bean
 public class UserService {
+    //private final PasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
     public Iterable<User> findAll() {
         return userRepository.findAll();
@@ -31,6 +31,7 @@ public class UserService {
         if(userRegistered.isPresent()){
             throw new UsernameRegisteredException();
         }
+
         return userRepository.save(user);
     }
 
@@ -61,9 +62,8 @@ public class UserService {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) {
-                var user = userRepository.findByLogin(username)
+                return userRepository.findByLogin(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-                return user;
             }
         };
     }
