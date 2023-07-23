@@ -17,28 +17,15 @@ import java.util.Set;
 @AllArgsConstructor //with all args constructor
 @Entity
 @Table
-public class Treatment{
-    @Override
-    //ignored the collections
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Treatment treatment = (Treatment) o;
-        return Double.compare(treatment.price, price) == 0 && duration == treatment.duration && Objects.equals(id, treatment.id) && Objects.equals(name, treatment.name) && Objects.equals(description, treatment.description) && Objects.equals(type, treatment.type);
-    }
+@DiscriminatorValue("Treatment")
+public class Treatment extends Item{
 
-    @Override
-    //ignored the collections
-    public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, type);
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String description;
-    private double price;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//    private String name;
+//    private String description;
+//    private double price;
     private int duration;
 
 
@@ -65,5 +52,33 @@ public class Treatment{
     }
 
 
+    @Override
+    //ignored the collections
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Treatment treatment = (Treatment) o;
+        return Double.compare(treatment.price, price) == 0 && duration == treatment.duration && Objects.equals(id, treatment.id) && Objects.equals(name, treatment.name) && Objects.equals(description, treatment.description) && Objects.equals(type, treatment.type);
+    }
 
+    @Override
+    //ignored the collections
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, duration, type);
+    }
+
+    //ver se irá funcionar, concatenando o pai com o filho
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        if (!super.equals(o)) return false;
+//        Treatment treatment = (Treatment) o;
+//        return duration == treatment.duration && Objects.equals(type, treatment.type);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(super.hashCode(), duration, type);
+//    }
 }

@@ -4,11 +4,13 @@ import com.cct.beautysalon.DTO.BookAvailableDTO;
 import com.cct.beautysalon.DTO.BookDTO;
 import com.cct.beautysalon.DTO.BookDetailsDTO;
 import com.cct.beautysalon.DTO.BookSearchParamsDTO;
-import com.cct.beautysalon.enums.BookStatus;
+import com.cct.beautysalon.enums.Role;
 import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.models.Book;
+import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.services.AvailabilityService;
 import com.cct.beautysalon.services.BookService;
+import com.cct.beautysalon.services.UserLoggedService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +31,7 @@ public class BookController {
 
     private final BookService bookService;
     private final AvailabilityService availabilityService;
+    private final UserLoggedService userLoggedService;
 
     private final ModelMapper mapper;
 
@@ -52,10 +55,45 @@ public class BookController {
     //TODO: FILTRAR OS BOOKS DO USUÁRIO QUANDO FOR CLIENT E ADMIN TRAZER TODOS E WORKER TRAZER OS SEUS PRÓPRIOS
     @GetMapping
     public List<BookDTO> getBooks() {
-        var books = StreamSupport.stream(bookService.findAll().spliterator(), false)
+        User userLogged = userLoggedService.getUserLogged();
+        List<Book> books = new ArrayList<>();
+
+        switch (userLogged.getRole()) {
+            case ADMIN:
+                books.addAll(StreamSupport.stream(bookService.findAll().spliterator(), false).collect(Collectors.toList()));
+                break;
+            case WORKER:
+                books.addAll(bookService.findByWorkerUserId(userLogged.getId()));
+                break;
+            case CLIENT:
+                books.addAll(bookService.findByClientUserId(userLogged.getId()));
+                break;
+            default:
+                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
+                return new ArrayList<>();
+        }
+
+        return books.stream()
+                .map(this::toDTO)
                 .collect(Collectors.toList());
-        return books.stream().map(this::toDTO).toList();
     }
+
+//    public List<BookDTO> getBooks() {
+//        User userLogged = userLoggedService.getUserLogged();
+//        if(userLogged.getRole() == Role.ADMIN) {
+//            var books = StreamSupport.stream(bookService.findAll().spliterator(), false)
+//                    .collect(Collectors.toList());
+//            return books.stream().map(this::toDTO).toList();
+//        }else if(userLogged.getRole() == Role.WORKER){
+//            var books = StreamSupport.stream(bookService.findByWorkerUserId(userLogged.getId()).spliterator(), false)
+//                    .collect(Collectors.toList());
+//            return books.stream().map(this::toDTO).toList();
+//        }else{ //client
+//            var books = StreamSupport.stream(bookService.findByClientUserId(userLogged.getId()).spliterator(), false)
+//                    .collect(Collectors.toList());
+//            return books.stream().map(this::toDTO).toList();
+//        }
+//    }
 
     /**
      * Create a new book
@@ -103,7 +141,7 @@ public class BookController {
             LocalDateTime endDateTimeShift = LocalDateTime.of(dateBook, a.getHourFinishTime().toLocalTime());
 
             //check from here to down
-            List<Book> books = bookService.findByWorkerUserId(a.getUser().getId(), dateBook);
+            List<Book> books = bookService.findByWorkerUserIdAndDateBook(a.getUser().getId(), dateBook);
             System.out.println("Availability user" + a.getUser().getId() + " - " + a.getUser().getFirstName() + " " + a.getUser().getLastName());
             System.out.println("Book size = " + books.size());
 

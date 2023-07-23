@@ -1,14 +1,10 @@
 package com.cct.beautysalon;
 
+import com.cct.beautysalon.enums.BookStatus;
 import com.cct.beautysalon.enums.Role;
-import com.cct.beautysalon.models.Availability;
-import com.cct.beautysalon.models.Treatment;
-import com.cct.beautysalon.models.TreatmentType;
-import com.cct.beautysalon.models.User;
-import com.cct.beautysalon.repositories.AvailabilityRepository;
-import com.cct.beautysalon.repositories.TreatmentRepository;
-import com.cct.beautysalon.repositories.TreatmentTypeRepository;
-import com.cct.beautysalon.repositories.UserRepository;
+import com.cct.beautysalon.models.*;
+import com.cct.beautysalon.repositories.*;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -17,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.sql.Time;
@@ -36,7 +34,9 @@ public class LoadDatabase {
     CommandLineRunner initDatabase(UserRepository userRepository,
                                    TreatmentTypeRepository treatmentTypeRepository,
                                    TreatmentRepository treatmentRepository,
-                                   AvailabilityRepository avaialabilityRepository){
+                                   AvailabilityRepository avaialabilityRepository,
+                                   ProductRepository productRepository,
+                                   BookRepository bookRepository){
         return args -> {
             LOG.info("Add user to database");
 
@@ -53,10 +53,13 @@ public class LoadDatabase {
             userRepository.save(new User("Catarine", "Morrison", "cat", encoderPWD,"smidori@gmail.com", Role.CLIENT,"female","+353(88)1231112"));
             userRepository.save(new User("John", "Willis", "john", encoderPWD,"smidori@gmail.com", Role.CLIENT,"male","+353(88)1231115"));
 
-            User userWorker1 = userRepository.findById(2L).get();
-            User userWorker2 = userRepository.findById(3L).get();
-            User userWorker3 = userRepository.findById(4L).get();
-            User userWorker4 = userRepository.findById(5L).get();
+            User userWorker2 = userRepository.findById(2L).get();
+            User userWorker3 = userRepository.findById(3L).get();
+            User userWorker4 = userRepository.findById(4L).get();
+            User userWorker5 = userRepository.findById(5L).get();
+
+            User clientUser6 = userRepository.findById(6L).get();
+            User clientUser7 = userRepository.findById(7L).get();
 
             LOG.info("Add treatments type to database");
             treatmentTypeRepository.save(new TreatmentType("Nails"));
@@ -120,33 +123,66 @@ public class LoadDatabase {
             w4Treatments.add(treatment3);
             w4Treatments.add(treatment4);
 
-            avaialabilityRepository.save(new Availability(w1Treatments,userWorker1,dateStart,null,
+            avaialabilityRepository.save(new Availability(w1Treatments,userWorker2,dateStart,null,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
 
-            avaialabilityRepository.save(new Availability(w2Treatments,userWorker2, dateStart,null,
+            avaialabilityRepository.save(new Availability(w2Treatments,userWorker3, dateStart,null,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
 
-            avaialabilityRepository.save(new Availability(w3Treatments,userWorker3,dateStart2,null,
+            avaialabilityRepository.save(new Availability(w3Treatments,userWorker4,dateStart2,null,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime())));
 
-            avaialabilityRepository.save(new Availability(w4Treatments,userWorker4, dateStart3,null,
+            avaialabilityRepository.save(new Availability(w4Treatments,userWorker5, dateStart3,null,
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
                     new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
 
-//            avaialabilityRepository.save(new Availability(w1Treatments,userWorker1,true,true,true,true,true,true,false,dateStart,null,
+//            avaialabilityRepository.save(new Availability(w1Treatments,userWorker2,true,true,true,true,true,true,false,dateStart,null,
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
 //
-//            avaialabilityRepository.save(new Availability(w2Treatments,userWorker2,true,false,true,false,true,true,false,dateStart,null,
+//            avaialabilityRepository.save(new Availability(w2Treatments,userWorker3,true,false,true,false,true,true,false,dateStart,null,
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("12:00").getTime()) ,
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("13:00").getTime()),
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("09:00").getTime()),
 //                    new java.sql.Time(new SimpleDateFormat("HH:mm").parse("18:00").getTime())));
+
+
+            //products
+            productRepository.save(new Product("Shampoo", "Oil hair",15));
+            productRepository.save(new Product("Conditioner", "Oil hair",20));
+            productRepository.save(new Product("Shampoo Curly hair", "Oil hair",15));
+            productRepository.save(new Product("Conditioner Curly hair", "Oil hair",20));
+            productRepository.save(new Product("Body lotion", "Oil massage",45));
+
+            //books
+            bookRepository.save(new Book(treatment1,
+                    LocalDate.parse("23/07/2023", dateFormat),
+                    LocalTime.of(9, 0),
+                    LocalTime.of(9, 30),
+                    clientUser6,
+                    userWorker4,
+                    LocalDateTime.now(),
+                    BookStatus.IN_SERVICE,
+                    "description 1 from client lorem ipsum dolor sit amet"
+            ));
+
+            bookRepository.save(new Book(treatment1,
+                    LocalDate.parse("28/07/2023", dateFormat),
+                    LocalTime.of(9, 0),
+                    LocalTime.of(9, 30),
+                    clientUser6,
+                    userWorker4,
+                    LocalDateTime.now(),
+                    BookStatus.BOOKED,
+                    "description 2 from client lorem ipsum dolor sit amet"
+            ));
+
+
         };
     }
 }

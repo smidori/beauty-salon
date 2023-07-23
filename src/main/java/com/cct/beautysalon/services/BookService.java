@@ -1,13 +1,11 @@
 package com.cct.beautysalon.services;
 
 import com.cct.beautysalon.exceptions.NotFoundException;
-import com.cct.beautysalon.models.Agenda;
 import com.cct.beautysalon.models.Book;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -56,7 +54,16 @@ public class BookService {
                         () -> new NotFoundException("Book by id: " + id + "was not found"));
     }
 
-    public List<Book> findByWorkerUserId(Long workerUserId, LocalDate dateBook) {
+    public List<Book> findByWorkerUserIdAndDateBook(Long workerUserId, LocalDate dateBook) {
         return bookRepository.findByWorkerUserIdAndDateBook(workerUserId, dateBook);
     }
+
+    public List<Book> findByWorkerUserId(Long workerUserId) {
+        return bookRepository.findByWorkerUserId(workerUserId);
+    }
+
+    public List<Book> findByClientUserId(Long clientUserId) {
+        return bookRepository.findByClientUserId(clientUserId);
+    }
+
 }

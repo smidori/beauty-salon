@@ -15,6 +15,13 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     @Query("SELECT b FROM Book b JOIN b.workerUser u WHERE u.id = :workerUserId and b.dateBook = :dateBook")
     List<Book> findByWorkerUserIdAndDateBook(long workerUserId, LocalDate dateBook);
 
+    @Query("SELECT b FROM Book b JOIN b.workerUser u WHERE u.id = :workerUserId")
+    List<Book> findByWorkerUserId(long workerUserId);
+
+    @Query("SELECT b FROM Book b JOIN b.clientUser u WHERE u.id = :clientUserId")
+    List<Book> findByClientUserId(long clientUserId);
+
+
 //    @OrderBy("dateBook ASC, workerUser.id ASC, startTimeBook ASC")
 //    List<Book> findAll();
 

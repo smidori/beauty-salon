@@ -63,4 +63,15 @@ public class Book {
 
     private String observation;
 
+    public Book(@NotNull Treatment treatment, @NotNull LocalDate dateBook, @NotNull LocalTime startTimeBook, @NotNull LocalTime finishTimeBook, @NotNull User clientUser, @NotNull User workerUser, @NotNull LocalDateTime createdDate, BookStatus status, String observation) {
+        this.treatment = treatment;
+        this.dateBook = dateBook;
+        this.startTimeBook = startTimeBook;
+        this.finishTimeBook = finishTimeBook;
+        this.clientUser = clientUser;
+        this.workerUser = workerUser;
+        this.createdDate = createdDate;
+        this.status = status;
+        this.observation = observation;
+    }
 }
