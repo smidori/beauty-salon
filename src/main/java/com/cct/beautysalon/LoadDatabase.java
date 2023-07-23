@@ -153,11 +153,11 @@ public class LoadDatabase {
 
 
             //products
-            productRepository.save(new Product("Shampoo", "Oil hair",15));
-            productRepository.save(new Product("Conditioner", "Oil hair",20));
-            productRepository.save(new Product("Shampoo Curly hair", "Oil hair",15));
-            productRepository.save(new Product("Conditioner Curly hair", "Oil hair",20));
-            productRepository.save(new Product("Body lotion", "Oil massage",45));
+            productRepository.save(new Product("Shampoo", "Oil hair",15,2));
+            productRepository.save(new Product("Conditioner", "Oil hair",20,1));
+            productRepository.save(new Product("Shampoo Curly hair", "Oil hair",15,3));
+            productRepository.save(new Product("Conditioner Curly hair", "Oil hair",20,3));
+            productRepository.save(new Product("Body lotion", "Oil massage",45,1));
 
             //books
             bookRepository.save(new Book(treatment1,

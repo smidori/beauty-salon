@@ -16,6 +16,7 @@ import java.util.Set;
 @Table
 @DiscriminatorValue("Product")
 public class Product extends Item{
+    private int stock;
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +31,10 @@ public class Product extends Item{
 //        super.price = price;
 //    }
 
-    public Product(String name, String description, double price) {
-        super(name, description, price);
+    public Product(String name, String description, double price, int stock) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
     }
 }
