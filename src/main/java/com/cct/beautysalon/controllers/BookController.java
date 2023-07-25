@@ -83,7 +83,7 @@ public class BookController {
     @GetMapping("/completedBooksByClientToday")
     public List<BookDTO> getBooksCompletedByClientUserIdAndDateBook(@RequestParam Long clientUserId) {
         List<Book> books = new ArrayList<>();
-        books.addAll(bookService.findByClientUserIdAndStatusAndDateBook(clientUserId, BookStatus.COMPLETED.toString(), LocalDate.now()));
+        books.addAll(bookService.findByClientUserIdAndStatusAndDateBook(clientUserId, BookStatus.COMPLETED, LocalDate.now()));
         return books.stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());

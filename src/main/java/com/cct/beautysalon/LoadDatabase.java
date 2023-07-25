@@ -172,6 +172,19 @@ public class LoadDatabase {
                     "description 1 from client lorem ipsum dolor sit amet"
             ));
 
+
+            bookRepository.save(new Book(treatment5,
+                    LocalDate.parse("25/07/2023", dateFormat),
+                    LocalTime.of(10, 30),
+                    LocalTime.of(11, 15),
+                    clientUser6,
+                    userWorker3,
+                    LocalDateTime.now(),
+                    BookStatus.COMPLETED,
+                    "description 1 from client lorem ipsum dolor sit amet"
+            ));
+
+
             bookRepository.save(new Book(treatment1,
                     LocalDate.parse("28/07/2023", dateFormat),
                     LocalTime.of(9, 0),

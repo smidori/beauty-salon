@@ -39,8 +39,8 @@ public class Treatment extends Item{
 //            joinColumns = @JoinColumn(name = "treatment_id"),
 //            inverseJoinColumns = @JoinColumn(name = "availability_id")
 //    )
-    @JsonIgnore
-    @ManyToMany(mappedBy = "treatments", fetch = FetchType.EAGER)
+    //@JsonIgnore
+    @ManyToMany(mappedBy = "treatments", fetch = FetchType.LAZY)
     private Set<Availability> availabilities;
 
     public Treatment(String name, String description, TreatmentType type, double price, int duration) {

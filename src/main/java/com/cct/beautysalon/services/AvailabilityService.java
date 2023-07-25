@@ -14,9 +14,9 @@ import java.util.List;
 public class AvailabilityService {
     private final AvailabilityRepository availabilityRepository;
 
-    public Iterable<Availability> findAll() {
-        return availabilityRepository.findAll();
-        //return availabilityRepository.findAllWithTreatments();
+    public Iterable<Availability> findAllWithTreatments() {
+        //return availabilityRepository.findAll();
+        return availabilityRepository.findAllWithTreatments();
     }
 
     public Availability findAvailabilityById(Long id) {

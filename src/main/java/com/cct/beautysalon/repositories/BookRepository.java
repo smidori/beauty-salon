@@ -1,5 +1,6 @@
 package com.cct.beautysalon.repositories;
 
+import com.cct.beautysalon.enums.BookStatus;
 import com.cct.beautysalon.models.Book;
 import jakarta.persistence.OrderBy;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +21,7 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     List<Book> findByClientUserId(long clientUserId);
 
     @Query("SELECT b FROM Book b JOIN b.clientUser u WHERE u.id = :clientUserId and b.status = :status and b.dateBook = :dateBook")
-    List<Book> findByClientUserIdAndStatusAndDateBook(long clientUserId, String status, LocalDate dateBook);
+    List<Book> findByClientUserIdAndStatusAndDateBook(long clientUserId, BookStatus status, LocalDate dateBook);
 
 
     @OrderBy("dateBook ASC, workerUser.id ASC, startTimeBook ASC")

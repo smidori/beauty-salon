@@ -1,5 +1,6 @@
 package com.cct.beautysalon.services;
 
+import com.cct.beautysalon.enums.BookStatus;
 import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Book;
 import com.cct.beautysalon.models.User;
@@ -66,7 +67,7 @@ public class BookService {
         return bookRepository.findByClientUserId(clientUserId);
     }
 
-    public List<Book> findByClientUserIdAndStatusAndDateBook(Long clientUserId, String status, LocalDate dateBook) {
+    public List<Book> findByClientUserIdAndStatusAndDateBook(Long clientUserId, BookStatus status, LocalDate dateBook) {
         return bookRepository.findByClientUserIdAndStatusAndDateBook(clientUserId,status,dateBook);
     }
 
