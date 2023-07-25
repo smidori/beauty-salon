@@ -35,8 +35,9 @@ public class LoadDatabase {
                                    TreatmentTypeRepository treatmentTypeRepository,
                                    TreatmentRepository treatmentRepository,
                                    AvailabilityRepository avaialabilityRepository,
-                                   ProductRepository productRepository,
-                                   BookRepository bookRepository){
+                                   ProductRepository productRepository
+            , BookRepository bookRepository
+    ){
         return args -> {
             LOG.info("Add user to database");
 
@@ -161,13 +162,13 @@ public class LoadDatabase {
 
             //books
             bookRepository.save(new Book(treatment1,
-                    LocalDate.parse("23/07/2023", dateFormat),
+                    LocalDate.parse("25/07/2023", dateFormat),
                     LocalTime.of(9, 0),
                     LocalTime.of(9, 30),
                     clientUser6,
                     userWorker4,
                     LocalDateTime.now(),
-                    BookStatus.IN_SERVICE,
+                    BookStatus.COMPLETED,
                     "description 1 from client lorem ipsum dolor sit amet"
             ));
 

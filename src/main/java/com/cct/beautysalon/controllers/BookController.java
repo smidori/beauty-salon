@@ -4,6 +4,7 @@ import com.cct.beautysalon.DTO.BookAvailableDTO;
 import com.cct.beautysalon.DTO.BookDTO;
 import com.cct.beautysalon.DTO.BookDetailsDTO;
 import com.cct.beautysalon.DTO.BookSearchParamsDTO;
+import com.cct.beautysalon.enums.BookStatus;
 import com.cct.beautysalon.enums.Role;
 import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.models.Book;
@@ -78,22 +79,15 @@ public class BookController {
                 .collect(Collectors.toList());
     }
 
-//    public List<BookDTO> getBooks() {
-//        User userLogged = userLoggedService.getUserLogged();
-//        if(userLogged.getRole() == Role.ADMIN) {
-//            var books = StreamSupport.stream(bookService.findAll().spliterator(), false)
-//                    .collect(Collectors.toList());
-//            return books.stream().map(this::toDTO).toList();
-//        }else if(userLogged.getRole() == Role.WORKER){
-//            var books = StreamSupport.stream(bookService.findByWorkerUserId(userLogged.getId()).spliterator(), false)
-//                    .collect(Collectors.toList());
-//            return books.stream().map(this::toDTO).toList();
-//        }else{ //client
-//            var books = StreamSupport.stream(bookService.findByClientUserId(userLogged.getId()).spliterator(), false)
-//                    .collect(Collectors.toList());
-//            return books.stream().map(this::toDTO).toList();
-//        }
-//    }
+
+    @GetMapping("/completedBooksByClientToday")
+    public List<BookDTO> getBooksCompletedByClientUserIdAndDateBook(@RequestParam Long clientUserId) {
+        List<Book> books = new ArrayList<>();
+        books.addAll(bookService.findByClientUserIdAndStatusAndDateBook(clientUserId, BookStatus.COMPLETED.toString(), LocalDate.now()));
+        return books.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Create a new book

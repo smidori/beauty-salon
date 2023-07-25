@@ -27,6 +27,9 @@ public class InvoiceItem {
     private double extra;
     private double discount;
     private double total;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @ManyToOne

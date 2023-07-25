@@ -66,4 +66,8 @@ public class BookService {
         return bookRepository.findByClientUserId(clientUserId);
     }
 
+    public List<Book> findByClientUserIdAndStatusAndDateBook(Long clientUserId, String status, LocalDate dateBook) {
+        return bookRepository.findByClientUserIdAndStatusAndDateBook(clientUserId,status,dateBook);
+    }
+
 }

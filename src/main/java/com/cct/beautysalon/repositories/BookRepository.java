@@ -1,11 +1,9 @@
 package com.cct.beautysalon.repositories;
 
-import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.models.Book;
 import jakarta.persistence.OrderBy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,8 +19,11 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     @Query("SELECT b FROM Book b JOIN b.clientUser u WHERE u.id = :clientUserId")
     List<Book> findByClientUserId(long clientUserId);
 
+    @Query("SELECT b FROM Book b JOIN b.clientUser u WHERE u.id = :clientUserId and b.status = :status and b.dateBook = :dateBook")
+    List<Book> findByClientUserIdAndStatusAndDateBook(long clientUserId, String status, LocalDate dateBook);
 
-//    @OrderBy("dateBook ASC, workerUser.id ASC, startTimeBook ASC")
-//    List<Book> findAll();
+
+    @OrderBy("dateBook ASC, workerUser.id ASC, startTimeBook ASC")
+    List<Book> findAll();
 
 }

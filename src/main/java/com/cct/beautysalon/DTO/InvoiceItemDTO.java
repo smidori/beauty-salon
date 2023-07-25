@@ -32,6 +32,7 @@ public class InvoiceItemDTO {
     private BookDTO book;
     private Item item;
     private Invoice invoice;
+    private String item_type;
 
     @Override
     public boolean equals(Object o) {
