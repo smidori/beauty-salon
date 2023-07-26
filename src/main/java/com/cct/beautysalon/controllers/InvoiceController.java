@@ -47,31 +47,15 @@ public class InvoiceController {
     private Invoice toEntity(InvoiceDTO invoiceDTO) {
         Invoice invoice = mapper.map(invoiceDTO, Invoice.class);
         invoice.setInvoiceItems(new HashSet<>());
-        // Verifique se há InvoiceItems no InvoiceDTO e adicione-os à instância de Invoice
+        // Add InvoiceItem to Invoice, to be able to persistAll and set the parent invoice
         if (invoiceDTO.getInvoiceItems() != null) {
             for (InvoiceItemDTO itemDTO : invoiceDTO.getInvoiceItems()) {
                 InvoiceItem item = mapper.map(itemDTO, InvoiceItem.class);
-//                InvoiceItem item = new InvoiceItem();
-//                item.setAmount(itemDTO.getAmount());
-//                item.setSubtotal(itemDTO.getSubtotal());
-//                item.setTotal(itemDTO.getTotal());
-//                if(itemDTO.getWorker() != null){
-//                    item.setWorker(mapper.map(itemDTO.getWorker(), User.class));
-//                }
-
                 invoice.addInvoiceItem(item);
             }
         }
-
         return invoice;
     }
-
-
-
-
-
-
-
 
     @GetMapping
     public List<InvoiceSummaryDTO> getInvoices() {

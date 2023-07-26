@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 public class InvoiceSummaryDTO {
     private Long id;
-    private UserDTO client;
+    private UserSummaryDTO client;
     private String observation;
     private double total;
     private LocalDateTime date;
