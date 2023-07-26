@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 @Builder
-@ToString(exclude = {"password"})
+//@ToString(exclude = {"password"})
 @Data //getters and setters
 @NoArgsConstructor //Without args constructor
 @AllArgsConstructor //with all args constructor
@@ -65,6 +65,10 @@ public class User implements UserDetails {
 	private String mobilePhone;
 
 	private String homePhone;
+
+	//não testado ainda
+//	@OneToMany(mappedBy = "client")
+//	private Set<Invoice> invoices;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

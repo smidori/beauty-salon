@@ -1,12 +1,14 @@
 package com.cct.beautysalon.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +20,10 @@ import java.util.Set;
 @Entity
 @Table
 @DiscriminatorValue("Treatment")
+// Indica o uso de "item_type" para identificar o tipo de objeto
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "item_type", visible = true)
+
+
 public class Treatment extends Item{
 
 //    @Id

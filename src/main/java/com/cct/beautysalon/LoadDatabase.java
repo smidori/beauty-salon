@@ -162,7 +162,7 @@ public class LoadDatabase {
 
             //books
             bookRepository.save(new Book(treatment1,
-                    LocalDate.parse("25/07/2023", dateFormat),
+                    LocalDate.parse("26/07/2023", dateFormat),
                     LocalTime.of(9, 0),
                     LocalTime.of(9, 30),
                     clientUser6,
@@ -174,7 +174,7 @@ public class LoadDatabase {
 
 
             bookRepository.save(new Book(treatment5,
-                    LocalDate.parse("25/07/2023", dateFormat),
+                    LocalDate.parse("26/07/2023", dateFormat),
                     LocalTime.of(10, 30),
                     LocalTime.of(11, 15),
                     clientUser6,

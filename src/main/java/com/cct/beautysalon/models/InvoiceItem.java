@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 @Data //getters and setters
@@ -36,9 +38,14 @@ public class InvoiceItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @ManyToOne
+//    @ManyToOne
+//    @JoinColumn(name = "invoice_id")
+//    private Invoice invoice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
+
 
     //private String Type; //posssible values Product, Treatment
 //    @ManyToOne
@@ -49,4 +56,26 @@ public class InvoiceItem {
 //    @JoinColumn(name = "treatment_id")
 //    private Treatment treatment;
 
+    @Override
+    public String toString() {
+        return "InvoiceItem{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", observation='" + observation + '\'' +
+
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InvoiceItem that = (InvoiceItem) o;
+        return amount == that.amount && Double.compare(that.subtotal, subtotal) == 0 && Double.compare(that.extra, extra) == 0 && Double.compare(that.discount, discount) == 0 && Double.compare(that.total, total) == 0 && Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(observation, that.observation) && Objects.equals(worker, that.worker) && Objects.equals(book, that.book) && Objects.equals(item, that.item) && Objects.equals(invoice, that.invoice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, observation, worker, amount, subtotal, extra, discount, total, book, item, invoice);
+    }
 }

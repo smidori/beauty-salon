@@ -1,6 +1,7 @@
 package com.cct.beautysalon.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,11 +11,12 @@ import java.util.Objects;
 import java.util.Set;
 
 @Data //getters and setters
-//@NoArgsConstructor //Without args constructor
+@NoArgsConstructor //Without args constructor
 @AllArgsConstructor //with all args constructor
 @Entity
 @Table
 @DiscriminatorValue("Product")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "item_type", visible = true)
 public class Product extends Item{
     private int stock;
 

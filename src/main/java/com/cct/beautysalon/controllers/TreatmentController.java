@@ -22,7 +22,11 @@ public class TreatmentController {
     private final ModelMapper mapper;
 
     private TreatmentSummaryDTO toDTO(Treatment treatment) {
-        return mapper.map(treatment, TreatmentSummaryDTO.class);
+        //return mapper.map(treatment, TreatmentSummaryDTO.class);
+        TreatmentSummaryDTO dto = new TreatmentSummaryDTO();
+        dto.setItemType("Treatment"); //Assign the type manually
+        mapper.map(treatment, dto);
+        return dto;
     }
 
     private Treatment toEntity(TreatmentSummaryDTO treatmentDTO) {
