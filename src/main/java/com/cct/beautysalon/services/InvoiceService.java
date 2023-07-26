@@ -23,6 +23,10 @@ public class InvoiceService {
                         () -> new NotFoundException("Invoice by id "+ id+" not found"));
     }
 
+    public Invoice findInvoiceByIdWithInvoiceItems(Long id) {
+        return invoiceRepository.findInvoiceByIdWithInvoiceItems(id);
+    }
+
     public Invoice save(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }

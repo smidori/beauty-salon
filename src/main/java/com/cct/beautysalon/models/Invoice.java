@@ -30,23 +30,15 @@ public class Invoice {
     private double total;
     private LocalDateTime date;
 
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "invoice_item",
-//            joinColumns = @JoinColumn(name = "availability_id"),
-//            inverseJoinColumns = @JoinColumn(name = "treatment_id")
-//    )
     //@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Set<InvoiceItem> invoiceItems = new HashSet<>();
 
-
-    public void updateInvoiceReference() {
-        if (invoiceItems != null) {
-            invoiceItems.forEach(item -> item.setInvoice(this));
-        }
-    }
+//    public void updateInvoiceReference() {
+//        if (invoiceItems != null) {
+//            invoiceItems.forEach(item -> item.setInvoice(this));
+//        }
+//    }
 
 
     public void addInvoiceItem(InvoiceItem item) {
@@ -54,10 +46,10 @@ public class Invoice {
         item.setInvoice(this);
     }
 
-    public void removeInvoiceItem(InvoiceItem item) {
-        invoiceItems.remove(item);
-        item.setInvoice(null);
-    }
+//    public void removeInvoiceItem(InvoiceItem item) {
+//        invoiceItems.remove(item);
+//        item.setInvoice(null);
+//    }
 
     @Override
     public boolean equals(Object o) {

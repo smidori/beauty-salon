@@ -38,23 +38,9 @@ public class InvoiceItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-//    @ManyToOne
-//    @JoinColumn(name = "invoice_id")
-//    private Invoice invoice;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
-
-
-    //private String Type; //posssible values Product, Treatment
-//    @ManyToOne
-//    @JoinColumn(name = "product_id")
-//    private Product product;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "treatment_id")
-//    private Treatment treatment;
 
     @Override
     public String toString() {

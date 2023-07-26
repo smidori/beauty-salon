@@ -68,15 +68,13 @@ public class InvoiceController {
     public InvoiceSummaryDTO save(@Valid @RequestBody InvoiceDTO invoiceDTO) {
         Invoice invoice = toEntity(invoiceDTO);
         invoice.setDate(LocalDateTime.now());
-        //invoice.updateInvoiceReference();
-        System.out.println("Invoice => " + invoice.toString());
         Invoice saved = invoiceService.save(invoice);
         return toSummaryDTO(saved);
     }
 
     @GetMapping("/{id}")
-    public InvoiceSummaryDTO getInvoiceById(@PathVariable("id") Long id) {
-        return toSummaryDTO(invoiceService.findInvoiceById(id));
+    public InvoiceDTO getInvoiceById(@PathVariable("id") Long id) {
+        return toDTO(invoiceService.findInvoiceByIdWithInvoiceItems(id));
     }
 
     @PutMapping("/{id}")

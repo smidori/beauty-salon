@@ -31,18 +31,32 @@ public class InvoiceItemDTO {
     private double total;
     private BookDTO book;
     private ItemDTO item;
-    private InvoiceDTO invoice;
+//    private InvoiceDTO invoice;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InvoiceItemDTO that = (InvoiceItemDTO) o;
-        return amount == that.amount && Double.compare(that.subtotal, subtotal) == 0 && Double.compare(that.extra, extra) == 0 && Double.compare(that.discount, discount) == 0 && Double.compare(that.total, total) == 0 && Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(observation, that.observation) && Objects.equals(worker, that.worker) && Objects.equals(book, that.book) && Objects.equals(item, that.item) && Objects.equals(invoice, that.invoice);
+        return amount == that.amount && Double.compare(that.subtotal, subtotal) == 0 && Double.compare(that.extra, extra) == 0 && Double.compare(that.discount, discount) == 0 && Double.compare(that.total, total) == 0 && Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(observation, that.observation) && Objects.equals(worker, that.worker) && Objects.equals(book, that.book) && Objects.equals(item, that.item);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, observation, worker, amount, subtotal, extra, discount, total, book, item, invoice);
+        return Objects.hash(id, description, observation, worker, amount, subtotal, extra, discount, total, book, item);
     }
+
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        InvoiceItemDTO that = (InvoiceItemDTO) o;
+//        return amount == that.amount && Double.compare(that.subtotal, subtotal) == 0 && Double.compare(that.extra, extra) == 0 && Double.compare(that.discount, discount) == 0 && Double.compare(that.total, total) == 0 && Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(observation, that.observation) && Objects.equals(worker, that.worker) && Objects.equals(book, that.book) && Objects.equals(item, that.item) && Objects.equals(invoice, that.invoice);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, description, observation, worker, amount, subtotal, extra, discount, total, book, item, invoice);
+//    }
 }
