@@ -1,21 +1,22 @@
 package com.cct.beautysalon.controllers;
 
-import com.cct.beautysalon.DTO.BookAvailableDTO;
-import com.cct.beautysalon.DTO.BookDTO;
-import com.cct.beautysalon.DTO.BookDetailsDTO;
-import com.cct.beautysalon.DTO.BookSearchParamsDTO;
+import com.cct.beautysalon.DTO.*;
 import com.cct.beautysalon.enums.BookStatus;
 import com.cct.beautysalon.enums.Role;
+import com.cct.beautysalon.exceptions.CantBeDeletedException;
+import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.models.Book;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.services.AvailabilityService;
 import com.cct.beautysalon.services.BookService;
 import com.cct.beautysalon.services.UserLoggedService;
+import com.cct.beautysalon.utils.ErrorResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -53,32 +54,97 @@ public class BookController {
         return book;
     }
 
-    //TODO: FILTRAR OS BOOKS DO USUÁRIO QUANDO FOR CLIENT E ADMIN TRAZER TODOS E WORKER TRAZER OS SEUS PRÓPRIOS
-    @GetMapping
-    public List<BookDTO> getBooks() {
+//    @GetMapping
+//    public List<BookDTO> getBooks() {
+//        User userLogged = userLoggedService.getUserLogged();
+//        List<Book> books = new ArrayList<>();
+//
+//        switch (userLogged.getRole()) {
+//            case ADMIN:
+//                books.addAll(StreamSupport.stream(bookService.findAllWithFilters(null,null,null,null).spliterator(), false).collect(Collectors.toList()));
+//                break;
+//            case WORKER:
+//                List<Book> booksWorker = bookService.findByWorkerUserId(userLogged.getId());
+//
+//                //remove the billed
+//                books.addAll(booksWorker.stream().filter(book -> book.getStatus() != BookStatus.BILLED).toList());
+//
+//                break;
+//            case CLIENT:
+//                List<Book> booksClient = bookService.findByClientUserId(userLogged.getId());
+//                //remove the billed
+//                books.addAll(booksClient.stream().filter(book -> book.getStatus() != BookStatus.BILLED).toList());
+//                break;
+//            default:
+//                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
+//                return new ArrayList<>();
+//        }
+//
+//        return books.stream()
+//                .map(this::toDTO)
+//                .collect(Collectors.toList());
+//    }
+
+    @PostMapping("/withFilters")
+    public List<BookDTO> getBooksWithFilters(@RequestBody BookFilterParamsDTO filter) {
         User userLogged = userLoggedService.getUserLogged();
         List<Book> books = new ArrayList<>();
 
         switch (userLogged.getRole()) {
             case ADMIN:
-                books.addAll(StreamSupport.stream(bookService.findAll().spliterator(), false).collect(Collectors.toList()));
+                //if there is no date, set the curretn date
+                if(filter.getDateBook() == null) {
+                    filter.setDateBook(LocalDate.now());
+                }
                 break;
-            case WORKER:
-                books.addAll(bookService.findByWorkerUserId(userLogged.getId()));
+            case WORKER: //only books for this worker
+                filter.setWorkerId(userLogged.getId());
+                //if there is no date, set the curretn date
+                if(filter.getDateBook() == null) {
+                    filter.setDateBook(LocalDate.now());
+                }
                 break;
-            case CLIENT:
-                books.addAll(bookService.findByClientUserId(userLogged.getId()));
-                break;
-            default:
-                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
-                return new ArrayList<>();
+            case CLIENT: //only books for this client
+                filter.setClientId(userLogged.getId());
+                if(filter.getBookStatus() == null) {
+                    filter.setBookStatus(BookStatus.BOOKED);
+                }
+            break;
+
         }
+
+        books.addAll(StreamSupport.stream(bookService.findAllWithFilters(filter.getDateBook(),
+                filter.getBookStatus(),
+                filter.getClientId(),
+                filter.getWorkerId()).spliterator(), false).collect(Collectors.toList()));
 
         return books.stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
+
+//    @PostMapping("/withFilters")
+//    public List<BookDTO> getBooksWithFilters(@RequestBody BookFilterParamsDTO filter) {
+//        User userLogged = userLoggedService.getUserLogged();
+//        List<Book> books = new ArrayList<>();
+//
+//        switch (userLogged.getRole()) {
+//            case ADMIN:
+//                books.addAll(StreamSupport.stream(bookService.findAllWithFilters(filter.getDateBook(),
+//                        filter.getBookStatus(),
+//                        filter.getClientId(),
+//                        filter.getWorkerId()).spliterator(), false).collect(Collectors.toList()));
+//                break;
+//            default:
+//                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
+//                return new ArrayList<>();
+//        }
+//
+//        return books.stream()
+//                .map(this::toDTO)
+//                .collect(Collectors.toList());
+//    }
 
     @GetMapping("/completedBooksByClientToday")
     public List<BookDTO> getBooksCompletedByClientUserIdAndDateBook(@RequestParam Long clientUserId) {
@@ -136,8 +202,6 @@ public class BookController {
 
             //check from here to down
             List<Book> books = bookService.findByWorkerUserIdAndDateBook(a.getUser().getId(), dateBook);
-            System.out.println("Availability user" + a.getUser().getId() + " - " + a.getUser().getFirstName() + " " + a.getUser().getLastName());
-            System.out.println("Book size = " + books.size());
 
             while (startDateTimeShift.isBefore(endDateTimeShift)) {
                 LocalDateTime startSlotTime = startDateTimeShift;
@@ -260,8 +324,16 @@ public class BookController {
      *
      * @param id
      */
+
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        bookService.delete(id);
+    public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
+        try{
+            bookService.delete(id);
+            return ResponseEntity.ok().build();
+        }catch(NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(new NotFoundException().getMessage()));
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(new CantBeDeletedException().getMessage()));
+        }
     }
 }

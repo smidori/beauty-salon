@@ -16,5 +16,6 @@ public class UserSummaryDTO {
     private String lastName;
     private String login;
     private Role role;
+    private String mobilePhone;
     
 }

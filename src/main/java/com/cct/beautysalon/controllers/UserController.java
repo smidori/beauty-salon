@@ -1,6 +1,10 @@
 package com.cct.beautysalon.controllers;
 
 import com.cct.beautysalon.DTO.UserDTO;
+import com.cct.beautysalon.DTO.UserSummaryDTO;
+import com.cct.beautysalon.enums.Role;
+import com.cct.beautysalon.exceptions.CantBeDeletedException;
+import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
@@ -35,10 +39,24 @@ public class UserController {
         return mapper.map(user, UserDTO.class);
     }
 
+
+    //convert the entity to UserSummaryDTO
+    private UserSummaryDTO toSummaryDTO(User user) {
+        return mapper.map(user, UserSummaryDTO.class);
+    }
+
+
     //convert the DTO to entity
     private User toEntity(UserDTO userDTO) {
         return mapper.map(userDTO, User.class);
     }
+
+    //convert the UserSummaryDTO to entity
+    private User toEntity(UserSummaryDTO userSummaryDTO) {
+        return mapper.map(userSummaryDTO, User.class);
+    }
+
+
     @GetMapping
     public List<UserDTO> getUsers() {
         var users = StreamSupport.stream(userService.findAll().spliterator(), false)
@@ -74,6 +92,13 @@ public class UserController {
         return toDTO(userService.findUserById(id));
     }
 
+    @GetMapping("/role/{role}")
+    public List<UserSummaryDTO> getUserById(@PathVariable("role") Role role) {
+        var users = StreamSupport.stream(userService.findUserByRole(role).spliterator(), false)
+                .collect(Collectors.toList());
+        return users.stream().map(this::toSummaryDTO).toList();
+    }
+
     /**
      * Update user by id
      * @param id
@@ -89,12 +114,20 @@ public class UserController {
     }
 
     /**
-     * Delete a user
+     * delete user if there is no reference to
      * @param id
+     * @return
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        userService.delete(id);
+    public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
+        try{
+            userService.delete(id);
+            return ResponseEntity.ok().build();
+        }catch(NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(new NotFoundException().getMessage()));
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(new CantBeDeletedException().getMessage()));
+        }
     }
 
 }

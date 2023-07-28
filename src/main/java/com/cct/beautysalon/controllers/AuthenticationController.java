@@ -1,13 +1,14 @@
 package com.cct.beautysalon.controllers;
 
+import com.cct.beautysalon.DTO.UserDTO;
 import com.cct.beautysalon.exceptions.AuthenticationException;
 import com.cct.beautysalon.exceptions.BadCredentialsException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
-import com.cct.beautysalon.models.jwt.SignUpRequest;
 import com.cct.beautysalon.models.jwt.SigninRequest;
 import com.cct.beautysalon.services.AuthenticationService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,16 +24,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final ModelMapper mapper;
+
+    private User toEntity(UserDTO userDTO) {
+        return mapper.map(userDTO, User.class);
+    }
 
     /**
      * This api is used to register the client
-     * @param request
+     * @param userDTO
      * @return
      */
     @PostMapping("/register")
-    public ResponseEntity<JwtAuthenticationResponse> register(@RequestBody SignUpRequest request) {
+    public ResponseEntity<JwtAuthenticationResponse> register(@RequestBody UserDTO userDTO) {
+
         try {
-            var response = authenticationService.register(request);
+            var response = authenticationService.register(toEntity(userDTO));
             return ResponseEntity.ok(response);
         }catch (UsernameRegisteredException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new JwtAuthenticationResponse(null, null, e.getMessage()));

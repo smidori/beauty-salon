@@ -20,7 +20,7 @@ import java.util.*;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 
-@Configuration
+//@Configuration
 public class LoadDatabase {
 
     private static final Logger LOG = LoggerFactory.getLogger(LoadDatabase.class);

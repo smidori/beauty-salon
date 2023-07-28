@@ -1,5 +1,6 @@
 package com.cct.beautysalon.services;
 
+import com.cct.beautysalon.enums.Role;
 import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,10 @@ public class UserService {
 
     public User findUserById(Long id) {
         return findOrThrowUserById(id);
+    }
+
+    public List<User> findUserByRole(Role role) {
+        return userRepository.findUserByRole(role);
     }
 
     public User save(User user) {

@@ -6,7 +6,6 @@ import com.cct.beautysalon.exceptions.BadCredentialsException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
-import com.cct.beautysalon.models.jwt.SignUpRequest;
 import com.cct.beautysalon.models.jwt.SigninRequest;
 import com.cct.beautysalon.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,22 +22,25 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationResponse register(SignUpRequest request) {
+    public JwtAuthenticationResponse register(User user) {
         try{
-            var userRegistered = userRepository.findByLogin(request.getLogin());
+            var userRegistered = userRepository.findByLogin(user.getLogin());
             if(userRegistered.isPresent()){
                 throw new UsernameRegisteredException();
             }
-            var user = User.builder()
-                    .firstName(request.getFirstName()).lastName(request.getLastName())
-                    .email(request.getEmail())
-                    .login(request.getLogin())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .gender(request.getGender())
-                    .role(Role.CLIENT).build();
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRole(Role.CLIENT);
             userRepository.save(user);
             var jwt = jwtService.generateToken(user);
-            return JwtAuthenticationResponse.builder().token(jwt).build();
+            UserSummaryDTO userSummaryDTO = UserSummaryDTO.builder().id(user.getId())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .role(user.getRole())
+                    .login(user.getLogin())
+                    .build();
+
+
+            return JwtAuthenticationResponse.builder().token(jwt).userDetails(userSummaryDTO).build();
         }catch (UsernameRegisteredException e){
             throw new UsernameRegisteredException(e.getMessage());
         }
@@ -47,8 +49,6 @@ public class AuthenticationService {
     }
 
     public JwtAuthenticationResponse login(SigninRequest request) {
-        System.out.println("-----> login: " + request.getLogin() + " password: " + request.getPassword());
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));

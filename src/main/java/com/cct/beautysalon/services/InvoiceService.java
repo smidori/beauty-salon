@@ -5,6 +5,8 @@ import com.cct.beautysalon.models.Invoice;
 import com.cct.beautysalon.repositories.InvoiceRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
@@ -15,6 +17,10 @@ public class InvoiceService {
 
     public Iterable<Invoice> findAll() {
         return invoiceRepository.findAll();
+    }
+
+    public List<Invoice> findAllByCLientId(Long clientId) {
+        return invoiceRepository.findAllByCLientId(clientId);
     }
 
     public Invoice findInvoiceById(Long id) {

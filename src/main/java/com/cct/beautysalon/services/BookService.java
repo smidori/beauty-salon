@@ -5,8 +5,10 @@ import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Book;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.BookRepository;
+import com.cct.beautysalon.repositories.specifications.BookSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -60,15 +62,23 @@ public class BookService {
     }
 
     public List<Book> findByWorkerUserId(Long workerUserId) {
-        return bookRepository.findByWorkerUserId(workerUserId);
+        Sort sort = Sort.by("dateBook", "startTimeBook").ascending();
+        return bookRepository.findByWorkerUserId(workerUserId,sort);
     }
 
     public List<Book> findByClientUserId(Long clientUserId) {
-        return bookRepository.findByClientUserId(clientUserId);
+        Sort sort = Sort.by("dateBook", "startTimeBook").ascending();
+        return bookRepository.findByClientUserId(clientUserId, sort);
     }
 
     public List<Book> findByClientUserIdAndStatusAndDateBook(Long clientUserId, BookStatus status, LocalDate dateBook) {
         return bookRepository.findByClientUserIdAndStatusAndDateBook(clientUserId,status,dateBook);
     }
 
+
+    public List<Book> findAllWithFilters(LocalDate date, BookStatus status, Long clientId, Long workerId) {
+        Specification<Book> spec = BookSpecifications.withFilters(date, status, clientId, workerId);
+        Sort sort = Sort.by("dateBook","startTimeBook", "workerUser.firstName").ascending();
+        return bookRepository.findAll(spec, sort);
+    }
 }
