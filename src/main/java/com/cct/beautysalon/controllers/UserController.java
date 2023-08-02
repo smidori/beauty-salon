@@ -93,7 +93,7 @@ public class UserController {
     }
 
     @GetMapping("/role/{role}")
-    public List<UserSummaryDTO> getUserById(@PathVariable("role") Role role) {
+    public List<UserSummaryDTO> getUserByRole(@PathVariable("role") Role role) {
         var users = StreamSupport.stream(userService.findUserByRole(role).spliterator(), false)
                 .collect(Collectors.toList());
         return users.stream().map(this::toSummaryDTO).toList();
@@ -109,6 +109,12 @@ public class UserController {
         if(!id.equals(userDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id doesn't match");
         }
+        var userSaved = userService.findUserById(id);
+        //to not encode the encoded password
+        if(!userSaved.getPassword().equals(userDTO.getPassword())) {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
         User user = toEntity(userDTO);
         userService.update(id, user);
     }

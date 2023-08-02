@@ -1,5 +1,6 @@
 package com.cct.beautysalon.DTO;
 
+import com.cct.beautysalon.models.Invoice;
 import com.cct.beautysalon.models.Treatment;
 import com.cct.beautysalon.models.User;
 import lombok.AllArgsConstructor;
@@ -36,5 +37,16 @@ public class InvoiceDTO {
     @Override
     public int hashCode() {
         return Objects.hash(id, client, observation, total, date);
+    }
+
+    public static Invoice toEntity(InvoiceDTO dto){
+        if(dto == null)
+            return null;
+        return Invoice.builder().id(dto.getId())
+                .client(UserSummaryDTO.toEntity(dto.getClient()))
+                .observation(dto.getObservation())
+                .total(dto.getTotal())
+                .date(dto.getDate())
+                .build();
     }
 }

@@ -1,15 +1,11 @@
 package com.cct.beautysalon.controllers;
 
-import com.cct.beautysalon.DTO.InvoiceDTO;
-import com.cct.beautysalon.DTO.InvoiceItemDTO;
-import com.cct.beautysalon.DTO.InvoiceSummaryDTO;
+import com.cct.beautysalon.DTO.*;
 import com.cct.beautysalon.enums.BookStatus;
-import com.cct.beautysalon.models.Book;
-import com.cct.beautysalon.models.Invoice;
-import com.cct.beautysalon.models.InvoiceItem;
-import com.cct.beautysalon.models.User;
+import com.cct.beautysalon.models.*;
 import com.cct.beautysalon.services.BookService;
 import com.cct.beautysalon.services.InvoiceService;
+import com.cct.beautysalon.services.ProductService;
 import com.cct.beautysalon.services.UserLoggedService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -34,7 +30,7 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
     private final BookService bookService;
     private final UserLoggedService userLoggedService;
-
+    private final ProductService productService;
     private final ModelMapper mapper;
 
     private InvoiceSummaryDTO toSummaryDTO(Invoice invoice) {
@@ -53,16 +49,36 @@ public class InvoiceController {
 //        return mapper.map(invoiceDTO, Invoice.class);
 //    }
 
+//    private Invoice toEntity(InvoiceDTO invoiceDTO) {
+//        System.out.println("aaaaaaaaaaaaaaaaaaa");
+//        Invoice invoice = mapper.map(invoiceDTO, Invoice.class);
+//        System.out.println("bbbbbbbbbbbbbbb");
+//        invoice.setInvoiceItems(new HashSet<>());
+//        // Add InvoiceItem to Invoice, to be able to persistAll and set the parent invoice
+//        if (invoiceDTO.getInvoiceItems() != null) {
+//            for (InvoiceItemDTO invoiceItemDTO : invoiceDTO.getInvoiceItems()) {
+//                System.out.println("ccccccccccc");
+//                InvoiceItem item = mapper.map(invoiceItemDTO, InvoiceItem.class);
+//                item.setItem(Item.fromDTO(invoiceItemDTO.getItem()));
+//                invoice.addInvoiceItem(item);
+//            }
+//        }
+//        return invoice;
+//    }
+
     private Invoice toEntity(InvoiceDTO invoiceDTO) {
-        Invoice invoice = mapper.map(invoiceDTO, Invoice.class);
+        Invoice invoice = InvoiceDTO.toEntity(invoiceDTO);
         invoice.setInvoiceItems(new HashSet<>());
-        // Add InvoiceItem to Invoice, to be able to persistAll and set the parent invoice
+
         if (invoiceDTO.getInvoiceItems() != null) {
-            for (InvoiceItemDTO itemDTO : invoiceDTO.getInvoiceItems()) {
-                InvoiceItem item = mapper.map(itemDTO, InvoiceItem.class);
-                invoice.addInvoiceItem(item);
+            for (InvoiceItemDTO invoiceItemDTO : invoiceDTO.getInvoiceItems()) {
+                InvoiceItem invoiceItem = InvoiceItemDTO.toEntity(invoiceItemDTO);
+                invoice.addInvoiceItem(invoiceItem);
             }
         }
+
+        //invoice.setInvoiceItems(new HashSet<>(invoiceItems));
+
         return invoice;
     }
 
@@ -92,17 +108,34 @@ public class InvoiceController {
     public InvoiceSummaryDTO save(@Valid @RequestBody InvoiceDTO invoiceDTO) {
         Invoice invoice = toEntity(invoiceDTO);
         invoice.setDate(LocalDateTime.now());
-        Invoice saved = invoiceService.save(invoice);
+        Invoice invoiceSaved = invoiceService.save(invoice);
+
+        //check if the products were selected and update the stock information
+        System.out.println("invoiceItem saved: " + invoiceSaved.getId());
+
+        var inv = invoiceService.findInvoiceById(invoiceSaved.getId());
+                //.findInvoiceByIdWithInvoiceItems(saved.getId());
+
+        System.out.println("--------- invoiceItems = " + inv.getInvoiceItems().size());
+
+        //update the stock information
+        inv.getInvoiceItems().stream().filter(invoiceItem ->
+                invoiceItem.getItem() instanceof Product)
+                .forEach(invoiceItem -> {
+                    Product product = productService.findProductById(invoiceItem.getItem().getId());
+                    product.setStock(product.getStock() - invoiceItem.getAmount());
+                    productService.update(product.getId(), product);
+                });
 
         //check which treatment is billed and change the status
-        saved.getInvoiceItems().stream().filter(invoiceItem -> invoiceItem.getBook() != null)
+        inv.getInvoiceItems().stream().filter(invoiceItem -> invoiceItem.getBook() != null)
         .forEach(invoiceItem -> {
             Book book = invoiceItem.getBook();
             book.setStatus(BookStatus.BILLED);
             book.setUpdatedDate(LocalDateTime.now());
             bookService.update(book.getId(), book);
         });
-        return toSummaryDTO(saved);
+        return toSummaryDTO(invoiceSaved);
     }
 
     @GetMapping("/{id}")
@@ -119,8 +152,8 @@ public class InvoiceController {
         invoiceService.update(id, invoice);
     }
 
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable("id") Long id) {
-//        invoiceService.delete(id);
-//    }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        invoiceService.delete(id);
+    }
 }

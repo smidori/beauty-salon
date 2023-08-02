@@ -2,10 +2,7 @@ package com.cct.beautysalon.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -17,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor //with all args constructor
 @Entity
 @Table
+@Builder
 public class Invoice {
 
     @Id

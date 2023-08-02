@@ -13,6 +13,6 @@ public interface AvailabilityRepository extends JpaRepository<Availability,Long>
     @Query("SELECT DISTINCT a FROM Availability a JOIN FETCH a.treatments")
     List<Availability> findAllWithTreatments();
 
-    @Query("SELECT a FROM Availability a JOIN a.treatments t WHERE t.id = :treatmentId and a.startDate <= :dateBook and a.finishDate is null")
+    @Query("SELECT a FROM Availability a JOIN a.treatments t WHERE t.id = :treatmentId and ((a.startDate <= :dateBook and a.finishDate is null) or (a.startDate <= :dateBook and a.finishDate >= :dateBook ) )")
     List<Availability> findByTreatmentId(long treatmentId, LocalDate dateBook);
 }

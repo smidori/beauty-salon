@@ -34,6 +34,10 @@ public class Treatment extends Item{
 //    private double price;
     private int duration;
 
+    public Treatment(long id, String name){
+        this.id = id;
+        this.name = name;
+    }
 
     @ManyToOne
     @JoinColumn(name = "treatment_type_id")

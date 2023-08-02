@@ -19,24 +19,15 @@ import java.util.Set;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "item_type", visible = true)
 public class Product extends Item{
     private int stock;
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    private String name;
-//    private String description;
-//    private double price;
-
-//    public Product(String name, String description, double price) {
-//        super.name = name;
-//        super.description = description;
-//        super.price = price;
-//    }
-
     public Product(String name, String description, double price, int stock) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
+    }
+
+    public Product(long id, String name){
+        this.id = id;
+        this.name = name;
     }
 }

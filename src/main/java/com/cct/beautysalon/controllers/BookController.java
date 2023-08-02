@@ -93,22 +93,22 @@ public class BookController {
         switch (userLogged.getRole()) {
             case ADMIN:
                 //if there is no date, set the curretn date
-                if(filter.getDateBook() == null) {
-                    filter.setDateBook(LocalDate.now());
-                }
+//                if(filter.getDateBook() == null) {
+//                    filter.setDateBook(LocalDate.now());
+//                }
                 break;
             case WORKER: //only books for this worker
                 filter.setWorkerId(userLogged.getId());
                 //if there is no date, set the curretn date
-                if(filter.getDateBook() == null) {
-                    filter.setDateBook(LocalDate.now());
-                }
+//                if(filter.getDateBook() == null) {
+//                    filter.setDateBook(LocalDate.now());
+//                }
                 break;
             case CLIENT: //only books for this client
                 filter.setClientId(userLogged.getId());
-                if(filter.getBookStatus() == null) {
-                    filter.setBookStatus(BookStatus.BOOKED);
-                }
+//                if(filter.getBookStatus() == null) {
+//                    filter.setBookStatus(BookStatus.BOOKED);
+//                }
             break;
 
         }
