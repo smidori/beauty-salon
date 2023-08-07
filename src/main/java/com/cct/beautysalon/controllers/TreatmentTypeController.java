@@ -8,7 +8,6 @@ import com.cct.beautysalon.services.TreatmentTypeService;
 import com.cct.beautysalon.utils.ErrorResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,33 +23,20 @@ import java.util.stream.StreamSupport;
 public class TreatmentTypeController {
 
     private final TreatmentTypeService treatmentTypeService;
-    private final ModelMapper mapper;
-
-    private TreatmentTypeDTO toDTO(TreatmentType treatmentType) {
-        return mapper.map(treatmentType, TreatmentTypeDTO.class);
-    }
-
-    private TreatmentType toEntity(TreatmentTypeDTO treatmentTypeDTO) {
-        return mapper.map(treatmentTypeDTO, TreatmentType.class);
-    }
 
     @GetMapping
     public List<TreatmentTypeDTO> getTreatmentTypes() {
-        var treatmentTypes = StreamSupport.stream(treatmentTypeService.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-        return treatmentTypes.stream().map(this::toDTO).toList();
+        return treatmentTypeService.findAll();
     }
 
     @PostMapping
     public TreatmentTypeDTO save(@Valid @RequestBody TreatmentTypeDTO treatmentTypeDTO) {
-        TreatmentType treatmentType = toEntity(treatmentTypeDTO);
-        TreatmentType saved = treatmentTypeService.save(treatmentType);
-        return toDTO(saved);
+        return treatmentTypeService.save(treatmentTypeDTO);
     }
 
     @GetMapping("/{id}")
     public TreatmentTypeDTO getTreatmentTypeById(@PathVariable("id") Long id) {
-        return toDTO(treatmentTypeService.findTreatmentTypeById(id));
+        return treatmentTypeService.findTreatmentTypeById(id);
     }
 
     @PutMapping("/{id}")
@@ -58,8 +44,7 @@ public class TreatmentTypeController {
         if(!id.equals(treatmentTypeDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "TreatmentType id doesn't match");
         }
-        TreatmentType treatmentType = toEntity(treatmentTypeDTO);
-        treatmentTypeService.update(id, treatmentType);
+        treatmentTypeService.update(id, treatmentTypeDTO);
     }
 
     /**

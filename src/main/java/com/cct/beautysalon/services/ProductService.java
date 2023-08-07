@@ -3,6 +3,7 @@ package com.cct.beautysalon.services;
 import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Product;
 import com.cct.beautysalon.repositories.ProductRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +15,8 @@ public class ProductService {
     }
 
     public Iterable<Product> findAll() {
-        return productRepository.findAll();
+        Sort sort = Sort.by("name").ascending();
+        return productRepository.findAll(sort);
     }
 
     public Product findProductById(Long id) {

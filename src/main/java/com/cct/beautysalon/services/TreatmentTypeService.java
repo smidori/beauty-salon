@@ -1,40 +1,60 @@
 package com.cct.beautysalon.services;
 
+import com.cct.beautysalon.DTO.TreatmentTypeDTO;
 import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Treatment;
 import com.cct.beautysalon.models.TreatmentType;
 import com.cct.beautysalon.repositories.TreatmentTypeRepository;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+@AllArgsConstructor
 @Service
 public class TreatmentTypeService {
     private final TreatmentTypeRepository treatmentTypeRepository;
+    private final ModelMapper mapper;
 
-    public TreatmentTypeService(TreatmentTypeRepository treatmentTypeRepository) {
-        this.treatmentTypeRepository = treatmentTypeRepository;
+    private TreatmentTypeDTO toDTO(TreatmentType treatmentType) {
+        return mapper.map(treatmentType, TreatmentTypeDTO.class);
     }
 
-    public Iterable<TreatmentType> findAll() {
-        return treatmentTypeRepository.findAll();
+    private TreatmentType toEntity(TreatmentTypeDTO treatmentTypeDTO) {
+        return mapper.map(treatmentTypeDTO, TreatmentType.class);
     }
 
-    public TreatmentType findTreatmentTypeById(Long id) {
-        return treatmentTypeRepository.findById(id)
+    public List<TreatmentTypeDTO> findAll() {
+        Sort sort = Sort.by("name").ascending();
+        var treatmentTypes = StreamSupport.stream(treatmentTypeRepository.findAll(sort).spliterator(), false)
+                .collect(Collectors.toList());
+        return treatmentTypes.stream().map(this::toDTO).toList();
+    }
+
+    public TreatmentTypeDTO findTreatmentTypeById(Long id) {
+        var treatment = treatmentTypeRepository.findById(id)
                 .orElseThrow(
                         () -> new NotFoundException("Treatment Type by id "+ id+" not found"));
+        return toDTO(treatment);
     }
 
-    public TreatmentType save(TreatmentType treatmentType) {
-        return treatmentTypeRepository.save(treatmentType);
+    public TreatmentTypeDTO save(TreatmentTypeDTO treatmentTypeDTO) {
+        TreatmentType treatmentType = toEntity(treatmentTypeDTO);
+        return toDTO(treatmentTypeRepository.save(treatmentType));
     }
 
 
-    public void update(Long id, TreatmentType treatmentType) {
+    public void update(Long id, TreatmentTypeDTO treatmentTypeDTO) {
         findTreatmentTypeById(id);
+        TreatmentType treatmentType = toEntity(treatmentTypeDTO);
         treatmentTypeRepository.save(treatmentType);
     }
 
-    public void delete(Long id) {//TODO - CRIAR LÓGICA PARA NÃO PERMITIR EXCLUIR SE HOUVER AGENDAMENTO
+    public void delete(Long id) {
         findTreatmentTypeById(id);
         treatmentTypeRepository.deleteById(id);
     }

@@ -6,6 +6,7 @@ import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,11 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 //@AllArgsConstructor //por algumas razão, dá erro na criação do bean
 public class UserService {
-    //private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
     public Iterable<User> findAll() {
-        return userRepository.findAll();
+        Sort sort = Sort.by("firstName").ascending().and(Sort.by("lastName").ascending());
+        return userRepository.findAll(sort);
     }
 
     public User findUserById(Long id) {

@@ -3,6 +3,7 @@ package com.cct.beautysalon.controllers;
 import com.cct.beautysalon.DTO.UserDTO;
 import com.cct.beautysalon.exceptions.AuthenticationException;
 import com.cct.beautysalon.exceptions.BadCredentialsException;
+import com.cct.beautysalon.exceptions.InvalidUsernameException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
@@ -56,7 +57,7 @@ public class AuthenticationController {
         try {
             var response = authenticationService.login(request);
             return ResponseEntity.ok(response);
-        } catch (BadCredentialsException e) {
+        } catch (InvalidUsernameException | BadCredentialsException e ) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JwtAuthenticationResponse(null, null, e.getMessage()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new JwtAuthenticationResponse(null, null, e.getMessage()));

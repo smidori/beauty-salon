@@ -29,20 +29,23 @@ public class Availability{
             joinColumns = @JoinColumn(name = "availability_id"),
             inverseJoinColumns = @JoinColumn(name = "treatment_id")
     )
+    @Column(nullable = false)
     private Set<Treatment> treatments;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @Column(nullable = false)
     private User user;
 
-    @Column
+
+    @Column(nullable = false)
     private LocalDate startDate;
-    @Column
+    @Column(nullable = false)
     private LocalDate finishDate;
 
-    @Column
+    @Column(nullable = false)
     private Time hourStartTime;
-    @Column
+    @Column(nullable = false)
     private Time hourFinishTime;
 
     public Availability(Set<Treatment> treatments, User user, LocalDate startDate, LocalDate finishDate, Time hourStartTime, Time hourFinishTime) {

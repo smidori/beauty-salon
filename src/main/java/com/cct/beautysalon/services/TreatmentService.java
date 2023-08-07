@@ -4,6 +4,7 @@ import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Treatment;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.repositories.TreatmentRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,8 @@ public class TreatmentService {
     }
 
     public Iterable<Treatment> findAll() {
-        return treatmentRepository.findAll();
+        Sort sort = Sort.by("name").ascending().and(Sort.by("type.name").ascending());
+        return treatmentRepository.findAll(sort);
     }
 
     public Treatment findTreatmentById(Long id) {

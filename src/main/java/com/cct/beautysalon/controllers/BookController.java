@@ -54,61 +54,17 @@ public class BookController {
         return book;
     }
 
-//    @GetMapping
-//    public List<BookDTO> getBooks() {
-//        User userLogged = userLoggedService.getUserLogged();
-//        List<Book> books = new ArrayList<>();
-//
-//        switch (userLogged.getRole()) {
-//            case ADMIN:
-//                books.addAll(StreamSupport.stream(bookService.findAllWithFilters(null,null,null,null).spliterator(), false).collect(Collectors.toList()));
-//                break;
-//            case WORKER:
-//                List<Book> booksWorker = bookService.findByWorkerUserId(userLogged.getId());
-//
-//                //remove the billed
-//                books.addAll(booksWorker.stream().filter(book -> book.getStatus() != BookStatus.BILLED).toList());
-//
-//                break;
-//            case CLIENT:
-//                List<Book> booksClient = bookService.findByClientUserId(userLogged.getId());
-//                //remove the billed
-//                books.addAll(booksClient.stream().filter(book -> book.getStatus() != BookStatus.BILLED).toList());
-//                break;
-//            default:
-//                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
-//                return new ArrayList<>();
-//        }
-//
-//        return books.stream()
-//                .map(this::toDTO)
-//                .collect(Collectors.toList());
-//    }
-
     @PostMapping("/withFilters")
     public List<BookDTO> getBooksWithFilters(@RequestBody BookFilterParamsDTO filter) {
         User userLogged = userLoggedService.getUserLogged();
         List<Book> books = new ArrayList<>();
 
         switch (userLogged.getRole()) {
-            case ADMIN:
-                //if there is no date, set the curretn date
-//                if(filter.getDateBook() == null) {
-//                    filter.setDateBook(LocalDate.now());
-//                }
-                break;
             case WORKER: //only books for this worker
                 filter.setWorkerId(userLogged.getId());
-                //if there is no date, set the curretn date
-//                if(filter.getDateBook() == null) {
-//                    filter.setDateBook(LocalDate.now());
-//                }
                 break;
             case CLIENT: //only books for this client
                 filter.setClientId(userLogged.getId());
-//                if(filter.getBookStatus() == null) {
-//                    filter.setBookStatus(BookStatus.BOOKED);
-//                }
             break;
 
         }
@@ -123,28 +79,6 @@ public class BookController {
                 .collect(Collectors.toList());
     }
 
-
-//    @PostMapping("/withFilters")
-//    public List<BookDTO> getBooksWithFilters(@RequestBody BookFilterParamsDTO filter) {
-//        User userLogged = userLoggedService.getUserLogged();
-//        List<Book> books = new ArrayList<>();
-//
-//        switch (userLogged.getRole()) {
-//            case ADMIN:
-//                books.addAll(StreamSupport.stream(bookService.findAllWithFilters(filter.getDateBook(),
-//                        filter.getBookStatus(),
-//                        filter.getClientId(),
-//                        filter.getWorkerId()).spliterator(), false).collect(Collectors.toList()));
-//                break;
-//            default:
-//                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
-//                return new ArrayList<>();
-//        }
-//
-//        return books.stream()
-//                .map(this::toDTO)
-//                .collect(Collectors.toList());
-//    }
 
     @GetMapping("/completedBooksByClientToday")
     public List<BookDTO> getBooksCompletedByClientUserIdAndDateBook(@RequestParam Long clientUserId) {
@@ -324,7 +258,6 @@ public class BookController {
      *
      * @param id
      */
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
         try{

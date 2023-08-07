@@ -3,6 +3,7 @@ package com.cct.beautysalon.services;
 import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.models.Invoice;
 import com.cct.beautysalon.repositories.InvoiceRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class InvoiceService {
     }
 
     public Iterable<Invoice> findAll() {
+        Sort sort = Sort.by("date").ascending().and(Sort.by("client.firstName").ascending()).and(Sort.by("client.lastName").ascending());
         return invoiceRepository.findAll();
     }
 

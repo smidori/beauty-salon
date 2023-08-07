@@ -3,6 +3,7 @@ package com.cct.beautysalon.services;
 import com.cct.beautysalon.DTO.UserSummaryDTO;
 import com.cct.beautysalon.enums.Role;
 import com.cct.beautysalon.exceptions.BadCredentialsException;
+import com.cct.beautysalon.exceptions.InvalidUsernameException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
@@ -50,12 +51,11 @@ public class AuthenticationService {
 
     public JwtAuthenticationResponse login(SigninRequest request) {
         try {
+            var user = userRepository.findByLogin(request.getLogin())
+                    .orElseThrow(() -> new InvalidUsernameException());
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));
-
-            var user = userRepository.findByLogin(request.getLogin())
-                    .orElseThrow(() -> new BadCredentialsException("Invalid login or password"));
-
             var jwt = jwtService.generateToken(user);
 
             UserSummaryDTO userSummaryDTO = UserSummaryDTO.builder().id(user.getId())
@@ -70,10 +70,11 @@ public class AuthenticationService {
                     .userDetails(userSummaryDTO)
                     .build();
         } catch (org.springframework.security.authentication.BadCredentialsException e) {
-            throw new BadCredentialsException("Invalid login or password",e);
-
+            throw new BadCredentialsException("Invalid password",e);
         } catch (org.springframework.security.core.AuthenticationException e) {
             throw new com.cct.beautysalon.exceptions.AuthenticationException("Authentication failed",e);
+        } catch (InvalidUsernameException e){
+            throw new InvalidUsernameException();
         }
     }
 
