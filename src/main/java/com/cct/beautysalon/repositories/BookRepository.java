@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book,Long>, JpaSpecificationExecutor<Book> {
@@ -29,4 +31,25 @@ public interface BookRepository extends JpaRepository<Book,Long>, JpaSpecificati
     //@OrderBy("dateBook ASC, workerUser.id ASC, startTimeBook ASC")
     List<Book> findAll(Specification<Book> specification,Sort sort);
 
+
+
+    @Query("SELECT b FROM Book b JOIN b.workerUser u WHERE u.id = :workerUserId " +
+            "and b.dateBook = :dateBook "
+            + "and ( "
+//                + " ( "
+//                + " (b.startTimeBook <= :startTimeBook and b.finishTimeBook > :startTimeBook) "
+//                + "or (b.startTimeBook < :finishTimeBook and b.finishTimeBook > :finishTimeBook) "
+//                + " ) or ("
+//                + " (b.startTimeBook < :finishTimeBook    and  b.finishTimeBook > :finishTimeBook ) "
+//                + "or ( :finishTimeBook >= b.startTimeBook and  :finishTimeBook < b.finishTimeBook) "
+//                + " ) or ("
+//                + " (:startTimeBook = b.startTimeBook  and  :finishTimeBook = b.finishTimeBook ) "
+//                + " ) "
+            + " ( (b.startTimeBook <= :startTimeBook )and (b.finishTimeBook >= :finishTimeBook) ) " +
+            "or ( (b.startTimeBook=:startTimeBook) and (b.finishTimeBook =:finishTimeBook) ) " +
+            "or ( (b.startTimeBook > :startTimeBook and b.startTimeBook < :finishTimeBook) " +
+                "or (b.finishTimeBook > :startTimeBook and b.finishTimeBook < :finishTimeBook) ) "
+            + " )"//and
+            + " ")
+    List<Book> findConflictBook(long workerUserId, LocalDate dateBook, LocalTime startTimeBook, LocalTime finishTimeBook);
 }

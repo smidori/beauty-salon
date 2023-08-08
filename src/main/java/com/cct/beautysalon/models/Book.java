@@ -41,6 +41,7 @@ public class Book {
     private LocalTime startTimeBook;
 
     @NotNull
+    //private LocalTime finishTimeBook;
     private LocalTime finishTimeBook;
 
     @NotNull

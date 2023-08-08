@@ -34,7 +34,6 @@ public class Availability{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @Column(nullable = false)
     private User user;
 
 
