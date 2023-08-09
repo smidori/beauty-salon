@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByLogin(String login);
+    Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.role = :role ORDER BY u.firstName ASC, u.lastName ASC")
     List<User> findUserByRole(Role role);

@@ -33,7 +33,6 @@ public class Book {
     @JoinColumn(name = "treatment_id")
     private Treatment treatment;
 
-    //private LocalDateTime dateOfAgenda;
     @NotNull
     private LocalDate dateBook;
 
@@ -41,7 +40,6 @@ public class Book {
     private LocalTime startTimeBook;
 
     @NotNull
-    //private LocalTime finishTimeBook;
     private LocalTime finishTimeBook;
 
     @NotNull
@@ -58,6 +56,10 @@ public class Book {
     private LocalDateTime createdDate;
 
     private LocalDateTime updatedDate;
+
+    private LocalDateTime inServiceDate;
+
+    private LocalDateTime completeDate;
 
     @Enumerated(EnumType.STRING)
     private BookStatus status;

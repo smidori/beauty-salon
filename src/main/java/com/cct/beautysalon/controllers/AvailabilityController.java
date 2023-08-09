@@ -4,6 +4,7 @@ import com.cct.beautysalon.DTO.AvailabilityDTO;
 import com.cct.beautysalon.exceptions.AvailabilityConflictException;
 import com.cct.beautysalon.exceptions.CantBeDeletedException;
 import com.cct.beautysalon.exceptions.NotFoundException;
+import com.cct.beautysalon.exceptions.StartDateAfterFinishDateException;
 import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.services.AvailabilityService;
 import com.cct.beautysalon.utils.ErrorResponse;
@@ -42,6 +43,8 @@ public class AvailabilityController {
             return ResponseEntity.ok(availabilityService.save(availabilityDTO));
         }catch(AvailabilityConflictException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage()));
+        }catch (StartDateAfterFinishDateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -70,6 +73,8 @@ public class AvailabilityController {
             return ResponseEntity.ok().build();
         }catch(AvailabilityConflictException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage()));
+        }catch (StartDateAfterFinishDateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
         }
 
     }

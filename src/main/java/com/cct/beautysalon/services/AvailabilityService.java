@@ -3,6 +3,7 @@ package com.cct.beautysalon.services;
 import com.cct.beautysalon.DTO.AvailabilityDTO;
 import com.cct.beautysalon.exceptions.AvailabilityConflictException;
 import com.cct.beautysalon.exceptions.NotFoundException;
+import com.cct.beautysalon.exceptions.StartDateAfterFinishDateException;
 import com.cct.beautysalon.models.Availability;
 import com.cct.beautysalon.repositories.AvailabilityRepository;
 import jakarta.persistence.Column;
@@ -44,6 +45,9 @@ public class AvailabilityService {
 
     public AvailabilityDTO save(AvailabilityDTO dto) {
         Availability availability = toEntity(dto);
+        if(availability.getFinishDate().isBefore(availability.getStartDate())){
+            throw new StartDateAfterFinishDateException();
+        }
         try{
             validatePeriodAvailability(dto);
             return toDTO(availabilityRepository.save(availability));
@@ -212,6 +216,11 @@ private void validatePeriodAvailability(AvailabilityDTO dto) {
         try{
             findOrThrowAvailabilityById(id);
             Availability availability = toEntity(dto);
+
+            if(availability.getFinishDate().isBefore(availability.getStartDate())){
+                throw new StartDateAfterFinishDateException();
+            }
+
             validatePeriodAvailability(dto);
             availabilityRepository.save(availability);
         }catch (AvailabilityConflictException e){

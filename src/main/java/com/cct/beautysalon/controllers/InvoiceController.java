@@ -130,10 +130,13 @@ public class InvoiceController {
         //check which treatment is billed and change the status
         inv.getInvoiceItems().stream().filter(invoiceItem -> invoiceItem.getBook() != null)
         .forEach(invoiceItem -> {
+
             Book book = invoiceItem.getBook();
-            book.setStatus(BookStatus.BILLED);
-            book.setUpdatedDate(LocalDateTime.now());
-            bookService.update(book.getId(), book);
+            bookService.updateStatusDescription(book.getId(), BookStatus.BILLED, book.getObservation());
+
+            //book.setStatus(BookStatus.BILLED);
+            //book.setInServiceDate(LocalDateTime.now());
+            //bookService.update(book.getId(), book);
         });
         return toSummaryDTO(invoiceSaved);
     }

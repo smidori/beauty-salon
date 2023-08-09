@@ -92,15 +92,33 @@ public class BookService {
 
     public void update(Long id, BookDTO bookDTO) {
         Book book = toEntity(bookDTO);
-        findOrThrowBookById(id);
-        //bookRepository.save(book);
-        this.update(bookDTO.getId(), book);
+        this.updateStatusDescription(id, bookDTO.getStatus(),bookDTO.getObservation());
     }
 
-    public void update(Long id, Book book) {
+    public void updateStatusDescription(Long id, BookStatus status, String observation) {
+
         findOrThrowBookById(id);
+
+        Book book = findOrThrowBookById(id);
+        book.setStatus(status);
+        book.setObservation(observation);
+        book.setUpdatedDate(LocalDateTime.now());
+
+        if(status == BookStatus.IN_SERVICE && book.getInServiceDate() == null){
+            book.setInServiceDate(LocalDateTime.now());
+        }else if(status == BookStatus.COMPLETED && book.getCompleteDate() == null) {
+            book.setCompleteDate(LocalDateTime.now());
+        }
+
         bookRepository.save(book);
     }
+
+
+//
+//    public void update(Long id, Book book) {
+//        findOrThrowBookById(id);
+//        bookRepository.save(book);
+//    }
 
     private Book findOrThrowBookById(Long id) {
         return bookRepository.findById(id)

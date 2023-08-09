@@ -26,12 +26,6 @@ import java.util.Set;
 
 public class Treatment extends Item{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    private String name;
-//    private String description;
-//    private double price;
     private int duration;
 
     public Treatment(long id, String name){
@@ -43,13 +37,6 @@ public class Treatment extends Item{
     @JoinColumn(name = "treatment_type_id")
     private TreatmentType type;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "availability_treatment",
-//            joinColumns = @JoinColumn(name = "treatment_id"),
-//            inverseJoinColumns = @JoinColumn(name = "availability_id")
-//    )
-    //@JsonIgnore
     @ManyToMany(mappedBy = "treatments", fetch = FetchType.LAZY)
     private Set<Availability> availabilities;
 
@@ -77,18 +64,4 @@ public class Treatment extends Item{
         return Objects.hash(id, name, description, price, duration, type);
     }
 
-    //ver se irá funcionar, concatenando o pai com o filho
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        if (!super.equals(o)) return false;
-//        Treatment treatment = (Treatment) o;
-//        return duration == treatment.duration && Objects.equals(type, treatment.type);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(super.hashCode(), duration, type);
-//    }
 }

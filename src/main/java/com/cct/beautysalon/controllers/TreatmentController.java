@@ -35,6 +35,7 @@ public class TreatmentController {
     }
 
     private Treatment toEntity(TreatmentSummaryDTO treatmentDTO) {
+
         return mapper.map(treatmentDTO, Treatment.class);
     }
 
