@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -26,7 +27,8 @@ public class Invoice {
     private User client;
     private String observation;
     private double total;
-    private LocalDateTime date;
+    private LocalDateTime createdDate;
+    private LocalDate date;
 
     //@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.PERSIST, orphanRemoval = true)

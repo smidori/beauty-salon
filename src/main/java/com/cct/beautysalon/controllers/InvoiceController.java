@@ -28,132 +28,57 @@ import java.util.stream.StreamSupport;
 @RequestMapping("/invoices")
 public class InvoiceController {
     private final InvoiceService invoiceService;
-    private final BookService bookService;
-    private final UserLoggedService userLoggedService;
-    private final ProductService productService;
-    private final ModelMapper mapper;
 
-    private InvoiceSummaryDTO toSummaryDTO(Invoice invoice) {
-        return mapper.map(invoice, InvoiceSummaryDTO.class);
-    }
 
-    private InvoiceDTO toDTO(Invoice invoice) {
-        return mapper.map(invoice, InvoiceDTO.class);
-    }
 
-    private Invoice toEntity(InvoiceSummaryDTO invoiceDTO) {
-        return mapper.map(invoiceDTO, Invoice.class);
-    }
 
-//    private Invoice toEntity(InvoiceDTO invoiceDTO) {
-//        return mapper.map(invoiceDTO, Invoice.class);
-//    }
 
-//    private Invoice toEntity(InvoiceDTO invoiceDTO) {
-//        System.out.println("aaaaaaaaaaaaaaaaaaa");
-//        Invoice invoice = mapper.map(invoiceDTO, Invoice.class);
-//        System.out.println("bbbbbbbbbbbbbbb");
-//        invoice.setInvoiceItems(new HashSet<>());
-//        // Add InvoiceItem to Invoice, to be able to persistAll and set the parent invoice
-//        if (invoiceDTO.getInvoiceItems() != null) {
-//            for (InvoiceItemDTO invoiceItemDTO : invoiceDTO.getInvoiceItems()) {
-//                System.out.println("ccccccccccc");
-//                InvoiceItem item = mapper.map(invoiceItemDTO, InvoiceItem.class);
-//                item.setItem(Item.fromDTO(invoiceItemDTO.getItem()));
-//                invoice.addInvoiceItem(item);
-//            }
+//    @GetMapping
+//    public List<InvoiceSummaryDTO> getInvoices() {
+//        User userLogged = userLoggedService.getUserLogged();
+//        List<Invoice> invoices = new ArrayList<>();
+//
+//        switch (userLogged.getRole()) {
+//            case ADMIN, WORKER:
+//                invoices.addAll(StreamSupport.stream(invoiceService.findAll().spliterator(), false)
+//                        .collect(Collectors.toList()));
+//                break;
+//            case CLIENT:
+//                invoices.addAll(invoiceService.findAllByCLientId(userLogged.getId()));
+//
+//                //sort in order descending
+//                invoices.sort(Comparator.comparing(Invoice::getDate).reversed());
+//                break;
+//            default:
+//                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
+//                return new ArrayList<>();
 //        }
-//        return invoice;
+//        return invoices.stream().map(this::toSummaryDTO).toList();
 //    }
 
-    private Invoice toEntity(InvoiceDTO invoiceDTO) {
-        Invoice invoice = InvoiceDTO.toEntity(invoiceDTO);
-        invoice.setInvoiceItems(new HashSet<>());
-
-        if (invoiceDTO.getInvoiceItems() != null) {
-            for (InvoiceItemDTO invoiceItemDTO : invoiceDTO.getInvoiceItems()) {
-                InvoiceItem invoiceItem = InvoiceItemDTO.toEntity(invoiceItemDTO);
-                invoice.addInvoiceItem(invoiceItem);
-            }
-        }
-
-        //invoice.setInvoiceItems(new HashSet<>(invoiceItems));
-
-        return invoice;
-    }
-
-    @GetMapping
-    public List<InvoiceSummaryDTO> getInvoices() {
-        User userLogged = userLoggedService.getUserLogged();
-        List<Invoice> invoices = new ArrayList<>();
-
-        switch (userLogged.getRole()) {
-            case ADMIN, WORKER:
-                invoices.addAll(StreamSupport.stream(invoiceService.findAll().spliterator(), false)
-                        .collect(Collectors.toList()));
-                break;
-            case CLIENT:
-                invoices.addAll(invoiceService.findAllByCLientId(userLogged.getId()));
-                //sort in order descending
-                invoices.sort(Comparator.comparing(Invoice::getDate).reversed());
-                break;
-            default:
-                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
-                return new ArrayList<>();
-        }
-        return invoices.stream().map(this::toSummaryDTO).toList();
+    @PostMapping("/withFilters")
+    public List<InvoiceSummaryDTO> getInvoiceWithFilters(@RequestBody InvoiceFilterParamsDTO filter) {
+        return invoiceService.findAllWithFilters(filter);
     }
 
     @PostMapping
     public InvoiceSummaryDTO save(@Valid @RequestBody InvoiceDTO invoiceDTO) {
-        Invoice invoice = toEntity(invoiceDTO);
-        invoice.setDate(LocalDateTime.now());
-        Invoice invoiceSaved = invoiceService.save(invoice);
-
-        //check if the products were selected and update the stock information
-        System.out.println("invoiceItem saved: " + invoiceSaved.getId());
-
-        var inv = invoiceService.findInvoiceById(invoiceSaved.getId());
-                //.findInvoiceByIdWithInvoiceItems(saved.getId());
-
-        System.out.println("--------- invoiceItems = " + inv.getInvoiceItems().size());
-
-        //update the stock information
-        inv.getInvoiceItems().stream().filter(invoiceItem ->
-                invoiceItem.getItem() instanceof Product)
-                .forEach(invoiceItem -> {
-                    Product product = productService.findProductById(invoiceItem.getItem().getId());
-                    product.setStock(product.getStock() - invoiceItem.getAmount());
-                    productService.update(product.getId(), product);
-                });
-
-        //check which treatment is billed and change the status
-        inv.getInvoiceItems().stream().filter(invoiceItem -> invoiceItem.getBook() != null)
-        .forEach(invoiceItem -> {
-
-            Book book = invoiceItem.getBook();
-            bookService.updateStatusDescription(book.getId(), BookStatus.BILLED, book.getObservation());
-
-            //book.setStatus(BookStatus.BILLED);
-            //book.setInServiceDate(LocalDateTime.now());
-            //bookService.update(book.getId(), book);
-        });
-        return toSummaryDTO(invoiceSaved);
+        return invoiceService.save(invoiceDTO);
     }
 
     @GetMapping("/{id}")
     public InvoiceDTO getInvoiceById(@PathVariable("id") Long id) {
-        return toDTO(invoiceService.findInvoiceByIdWithInvoiceItems(id));
+        return invoiceService.findInvoiceByIdWithInvoiceItems(id);
     }
 
-    @PutMapping("/{id}")
-    public void update(@PathVariable("id") Long id, @Valid @RequestBody InvoiceSummaryDTO invoiceDTO) {
-        if(!id.equals(invoiceDTO.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invoice id doesn't match");
-        }
-        Invoice invoice = toEntity(invoiceDTO);
-        invoiceService.update(id, invoice);
-    }
+//    @PutMapping("/{id}")
+//    public void update(@PathVariable("id") Long id, @Valid @RequestBody InvoiceSummaryDTO invoiceDTO) {
+//        if(!id.equals(invoiceDTO.getId())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invoice id doesn't match");
+//        }
+//        Invoice invoice = toEntity(invoiceDTO);
+//        invoiceService.update(id, invoice);
+//    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {

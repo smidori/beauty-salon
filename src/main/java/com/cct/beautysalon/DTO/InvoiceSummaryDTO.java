@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -18,7 +19,8 @@ public class InvoiceSummaryDTO {
     private UserSummaryDTO client;
     private String observation;
     private double total;
-    private LocalDateTime date;
+    private LocalDateTime createdDate;
+    private LocalDate date;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

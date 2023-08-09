@@ -12,10 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data
 @Builder
-public class BookFilterParamsDTO {
-    private Long workerId;
+public class InvoiceFilterParamsDTO {
     private Long clientId;
     private LocalDate dateBook;
-    private BookStatus bookStatus;
     private String filterDateBy;
 }

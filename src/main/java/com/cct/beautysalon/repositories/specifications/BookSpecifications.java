@@ -8,11 +8,17 @@ import java.time.LocalDate;
 
 public class BookSpecifications {
 
-    public static Specification<Book> withFilters(LocalDate dateBook, BookStatus status, Long clientUser, Long workerUser) {
+    public static Specification<Book> withFilters(LocalDate dateBook, BookStatus status, Long clientUser, Long workerUser,String filterDateBy) {
         Specification<Book> spec = Specification.where(null);
 
         if (dateBook != null) {
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("dateBook"), dateBook));
+            if(filterDateBy == null || filterDateBy.equals("=")){
+                spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("dateBook"), dateBook));
+            }else if(filterDateBy.equals(">=")){
+                spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("dateBook"), dateBook));
+            }else{
+                spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("dateBook"), dateBook));
+            }
         }
 
         if (status != null) {

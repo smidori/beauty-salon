@@ -12,11 +12,5 @@ import java.time.LocalDate;
 public class BookSearchParamsDTO {
     private UserDTO user;
     private TreatmentSummaryDTO treatment;
-
     private LocalDate dateBook;
-
-    //private LocalTime startTimeBook;
-
-    //private LocalTime finishTimeBook;
-
 }

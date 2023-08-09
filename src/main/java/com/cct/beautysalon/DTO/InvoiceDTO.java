@@ -23,9 +23,9 @@ public class InvoiceDTO {
     private UserSummaryDTO client;
     private String observation;
     private double total;
-    private LocalDateTime date;
+    private LocalDateTime createdDate;
     private Set<InvoiceItemDTO> invoiceItems;
-
+    private LocalDate date;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +47,7 @@ public class InvoiceDTO {
                 .observation(dto.getObservation())
                 .total(dto.getTotal())
                 .date(dto.getDate())
+                .createdDate(dto.getCreatedDate())
                 .build();
     }
 }

@@ -15,10 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -60,9 +57,9 @@ public class BookService {
         Book book = toEntity(bookDTO);
 
         User userLogged = userLoggedService.getUserLogged();
-        if(userLogged.getRole() != Role.CLIENT){
+        if (userLogged.getRole() != Role.CLIENT) {
             book.setClientUser(book.getClientUser());
-        }else{
+        } else {
             book.setClientUser(userLogged);
         }
         book.setCreatedDate(LocalDateTime.now());
@@ -70,8 +67,8 @@ public class BookService {
 
         //check if there is any conflict
         List<Book> conflictBook = this.findConflictBook(book);
-        if(conflictBook.size() > 0){
-            System.out.println(" conflicts size = " + conflictBook.size() );
+        if (conflictBook.size() > 0) {
+            System.out.println(" conflicts size = " + conflictBook.size());
             System.out.println("id = " + conflictBook.get(0).getId());
             throw new BookingNotAvailableException();
             //Sorry,this booking isn't available anymore, please choose another day, time and or professional
@@ -92,7 +89,7 @@ public class BookService {
 
     public void update(Long id, BookDTO bookDTO) {
         Book book = toEntity(bookDTO);
-        this.updateStatusDescription(id, bookDTO.getStatus(),bookDTO.getObservation());
+        this.updateStatusDescription(id, bookDTO.getStatus(), bookDTO.getObservation());
     }
 
     public void updateStatusDescription(Long id, BookStatus status, String observation) {
@@ -104,9 +101,9 @@ public class BookService {
         book.setObservation(observation);
         book.setUpdatedDate(LocalDateTime.now());
 
-        if(status == BookStatus.IN_SERVICE && book.getInServiceDate() == null){
+        if (status == BookStatus.IN_SERVICE && book.getInServiceDate() == null) {
             book.setInServiceDate(LocalDateTime.now());
-        }else if(status == BookStatus.COMPLETED && book.getCompleteDate() == null) {
+        } else if (status == BookStatus.COMPLETED && book.getCompleteDate() == null) {
             book.setCompleteDate(LocalDateTime.now());
         }
 
@@ -132,7 +129,7 @@ public class BookService {
 
     public List<Book> findByWorkerUserId(Long workerUserId) {
         Sort sort = Sort.by("dateBook", "startTimeBook").ascending();
-        return bookRepository.findByWorkerUserId(workerUserId,sort);
+        return bookRepository.findByWorkerUserId(workerUserId, sort);
     }
 
     public List<Book> findByClientUserId(Long clientUserId) {
@@ -142,12 +139,11 @@ public class BookService {
 
     public List<BookDTO> findByClientUserIdAndStatusAndDateBook(Long clientUserId) {
         List<Book> books = new ArrayList<>();
-        books.addAll(bookRepository.findByClientUserIdAndStatusAndDateBook(clientUserId,BookStatus.COMPLETED, LocalDate.now()));
+        books.addAll(bookRepository.findByClientUserIdAndStatusAndDateBook(clientUserId, BookStatus.COMPLETED, LocalDate.now()));
         return books.stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
-
 
 
     public Map<String, BookAvailableDTO> getBookAvailable(BookSearchParamsDTO bookSearchParams) {
@@ -181,7 +177,7 @@ public class BookService {
                     if ((isAfterOrEqual(startSlotTime, bookingStarted) && startSlotTime.isBefore(bookingFinished)) &&
                             (isAfterOrEqual(endSlotTime, bookingStarted) && isBeforeOrEqual(endSlotTime, bookingFinished))
                     ) {
-                        startDateTimeShift =    bookingFinished;
+                        startDateTimeShift = bookingFinished;
                         hasBookingInInterval = true;
                         System.out.println("hasBookingInInterval A startDateTimeShift =  " + startDateTimeShift);
                         break;
@@ -206,8 +202,8 @@ public class BookService {
                         System.out.println("hasBookingInInterval E startDateTimeShift = " + startDateTimeShift);
                         hasBookingInInterval = true;
                         break;
-                    }else if((startSlotTime.isAfter(bookingStarted) && startSlotTime.isBefore(bookingFinished)) ||
-                            endSlotTime.isAfter(bookingStarted) && endSlotTime.isBefore(bookingFinished)){
+                    } else if ((startSlotTime.isAfter(bookingStarted) && startSlotTime.isBefore(bookingFinished)) ||
+                            endSlotTime.isAfter(bookingStarted) && endSlotTime.isBefore(bookingFinished)) {
                         startDateTimeShift = endSlotTime;
                         System.out.println("hasBookingInInterval F startDateTimeShift = " + startDateTimeShift);
                         hasBookingInInterval = true;
@@ -269,7 +265,6 @@ public class BookService {
     }
 
 
-
     public List<BookDTO> findAllWithFilters(BookFilterParamsDTO filter) {
 
         User userLogged = userLoggedService.getUserLogged();
@@ -287,8 +282,9 @@ public class BookService {
         Specification<Book> spec = BookSpecifications.withFilters(filter.getDateBook(),
                 filter.getBookStatus(),
                 filter.getClientId(),
-                filter.getWorkerId());
-        Sort sort = Sort.by("dateBook","startTimeBook", "workerUser.firstName").ascending();
+                filter.getWorkerId(),
+                filter.getFilterDateBy());
+        Sort sort = Sort.by("dateBook", "startTimeBook", "workerUser.firstName").ascending();
 
 
         books.addAll(StreamSupport.stream(bookRepository.findAll(spec, sort).spliterator(), false).collect(Collectors.toList()));
