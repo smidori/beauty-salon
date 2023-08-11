@@ -23,7 +23,12 @@ public class UserDTO {
     private String mobilePhone;
     private String homePhone;
 
-
+    /**
+     * constructor
+     * @param id
+     * @param firstName
+     * @param lastName
+     */
     public UserDTO(Long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;

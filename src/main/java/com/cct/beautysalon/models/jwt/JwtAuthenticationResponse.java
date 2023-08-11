@@ -15,5 +15,4 @@ public class JwtAuthenticationResponse {
     private String token;
     private UserSummaryDTO userDetails;
     private String message;
-
 }

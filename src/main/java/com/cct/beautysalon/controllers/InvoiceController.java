@@ -30,56 +30,44 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
 
-
-
-
-//    @GetMapping
-//    public List<InvoiceSummaryDTO> getInvoices() {
-//        User userLogged = userLoggedService.getUserLogged();
-//        List<Invoice> invoices = new ArrayList<>();
-//
-//        switch (userLogged.getRole()) {
-//            case ADMIN, WORKER:
-//                invoices.addAll(StreamSupport.stream(invoiceService.findAll().spliterator(), false)
-//                        .collect(Collectors.toList()));
-//                break;
-//            case CLIENT:
-//                invoices.addAll(invoiceService.findAllByCLientId(userLogged.getId()));
-//
-//                //sort in order descending
-//                invoices.sort(Comparator.comparing(Invoice::getDate).reversed());
-//                break;
-//            default:
-//                // Caso a role não corresponda a nenhuma das opções acima, retornar uma lista vazia.
-//                return new ArrayList<>();
-//        }
-//        return invoices.stream().map(this::toSummaryDTO).toList();
-//    }
-
+    /**
+     * get invoice by filter
+     *
+     * @param filter
+     * @return
+     */
     @PostMapping("/withFilters")
     public List<InvoiceSummaryDTO> getInvoiceWithFilters(@RequestBody InvoiceFilterParamsDTO filter) {
         return invoiceService.findAllWithFilters(filter);
     }
 
+    /**
+     * saves the invoice
+     *
+     * @param invoiceDTO
+     * @return
+     */
     @PostMapping
     public InvoiceSummaryDTO save(@Valid @RequestBody InvoiceDTO invoiceDTO) {
         return invoiceService.save(invoiceDTO);
     }
 
+    /**
+     * get invoice
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public InvoiceDTO getInvoiceById(@PathVariable("id") Long id) {
         return invoiceService.findInvoiceByIdWithInvoiceItems(id);
     }
 
-//    @PutMapping("/{id}")
-//    public void update(@PathVariable("id") Long id, @Valid @RequestBody InvoiceSummaryDTO invoiceDTO) {
-//        if(!id.equals(invoiceDTO.getId())) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invoice id doesn't match");
-//        }
-//        Invoice invoice = toEntity(invoiceDTO);
-//        invoiceService.update(id, invoice);
-//    }
-
+    /**
+     * deletes the invoice
+     *
+     * @param id
+     */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
         invoiceService.delete(id);

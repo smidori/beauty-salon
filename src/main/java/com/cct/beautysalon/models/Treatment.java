@@ -27,18 +27,19 @@ import java.util.Set;
 public class Treatment extends Item{
 
     private int duration;
-
-    public Treatment(long id, String name){
-        this.id = id;
-        this.name = name;
-    }
-
     @ManyToOne
     @JoinColumn(name = "treatment_type_id")
     private TreatmentType type;
 
     @ManyToMany(mappedBy = "treatments", fetch = FetchType.LAZY)
     private Set<Availability> availabilities;
+
+
+    //constructor
+    public Treatment(long id, String name){
+        this.id = id;
+        this.name = name;
+    }
 
     public Treatment(String name, String description, TreatmentType type, double price, int duration) {
         this.name = name;
@@ -47,6 +48,7 @@ public class Treatment extends Item{
         this.type = type;
         this.duration = duration;
     }
+
 
 
     @Override

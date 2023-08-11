@@ -1,7 +1,7 @@
 package com.cct.beautysalon.exceptions;
 
 public class UsernameRegisteredException extends RuntimeException {
-
+    //constructors
     public UsernameRegisteredException() {
         super("That username is taken. Try another");
     }

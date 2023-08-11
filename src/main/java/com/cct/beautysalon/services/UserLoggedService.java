@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserLoggedService {
+    /**
+     * get user logged
+     * @return
+     */
     public User getUserLogged() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof User) {
@@ -21,15 +25,5 @@ public class UserLoggedService {
             return user;
         }
         return null;
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            return userDetails;
-////            // Agora você pode acessar os detalhes do usuário logado, como nome, e-mail, etc.
-////            String username = userDetails.getUsername();
-////            // ...
-//        }else {
-//            return null;
-//        }
     }
 }

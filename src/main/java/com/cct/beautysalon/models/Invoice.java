@@ -30,26 +30,18 @@ public class Invoice {
     private LocalDateTime createdDate;
     private LocalDate date;
 
-    //@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Set<InvoiceItem> invoiceItems = new HashSet<>();
 
-//    public void updateInvoiceReference() {
-//        if (invoiceItems != null) {
-//            invoiceItems.forEach(item -> item.setInvoice(this));
-//        }
-//    }
-
-
+    /**
+     * add invoice item
+     * @param item
+     */
     public void addInvoiceItem(InvoiceItem item) {
         invoiceItems.add(item);
         item.setInvoice(this);
     }
-
-//    public void removeInvoiceItem(InvoiceItem item) {
-//        invoiceItems.remove(item);
-//        item.setInvoice(null);
-//    }
 
     @Override
     public boolean equals(Object o) {

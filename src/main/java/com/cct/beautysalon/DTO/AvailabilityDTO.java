@@ -36,16 +36,4 @@ public class AvailabilityDTO {
         return Objects.hash(id, user, startDate, finishDate, hourStartTime, hourFinishTime);
     }
 
-    //    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        AvailabilityDTO that = (AvailabilityDTO) o;
-//        return Objects.equals(id, that.id) && Objects.equals(treatments, that.treatments) && Objects.equals(user, that.user) && Objects.equals(startDate, that.startDate) && Objects.equals(finishDate, that.finishDate) && Objects.equals(hourStartTime, that.hourStartTime) && Objects.equals(hourFinishTime, that.hourFinishTime);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(id, treatments, user, startDate, finishDate, hourStartTime, hourFinishTime);
-//    }
 }

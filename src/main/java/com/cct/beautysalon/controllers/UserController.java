@@ -4,6 +4,7 @@ import com.cct.beautysalon.DTO.UserDTO;
 import com.cct.beautysalon.DTO.UserSummaryDTO;
 import com.cct.beautysalon.enums.Role;
 import com.cct.beautysalon.exceptions.CantBeDeletedException;
+import com.cct.beautysalon.exceptions.EmailAlreadyRegisteredException;
 import com.cct.beautysalon.exceptions.NotFoundException;
 import com.cct.beautysalon.exceptions.UsernameRegisteredException;
 import com.cct.beautysalon.models.User;
@@ -78,7 +79,10 @@ public class UserController {
             return ResponseEntity.ok(toDTO(userSaved));
         }catch (UsernameRegisteredException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+        }catch (EmailAlreadyRegisteredException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
         }
+
     }
 
     /**

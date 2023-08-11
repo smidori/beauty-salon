@@ -29,9 +29,7 @@ public class BookDTO {
     private static ModelMapper modelMapper;
 
     private Long id;
-    //private Availability availability;
     private LocalDateTime dateOfAgenda;
-    //private Treatment treatment;
     private Long treatmentId;
 
     private LocalDate dateBook;
@@ -52,6 +50,10 @@ public class BookDTO {
     private LocalDateTime inServiceDate;
     private LocalDateTime completeDate;
 
+    /**
+     * convert to entity, once some entities can enter in a recursive manner, the mapper can't be used
+     * @return
+     */
     public Book toEntity() {
         Book book = new Book();
         book.setId(this.id);
@@ -88,37 +90,4 @@ public class BookDTO {
         return book;
     }
 
-
-//    public static BookDTO toDTO(Book book) {
-//        BookDTO bookDTO = new BookDTO();
-//        bookDTO.setId(book.getId());
-//        bookDTO.setDateBook(book.getDateBook());
-//        bookDTO.setStartTimeBook(book.getStartTimeBook());
-//        bookDTO.setFinishTimeBook(book.getFinishTimeBook());
-//
-//        Treatment treatment = new Treatment();
-//        treatment.setId(this.treatmentId);
-//        treatment.setName(this.treatmentName);
-//        bookDTO.setTreatment(treatment);
-//
-//
-//        User workerUser = User.builder().id(this.workerUserId)
-//                .firstName(this.workerUserFirstName)
-//                .lastName(this.workerUserLastName)
-//                .build();
-//        bookDTO.setWorkerUser(workerUser);
-//
-//        User clientUser = User.builder()
-//                .id(this.clientUserId)
-//                .firstName(this.clientUserFirstName)
-//                .lastName(this.clientUserLastName)
-//                .build();
-//        bookDTO.setClientUser(clientUser);
-//
-//        bookDTO.setStatus(this.status);
-//        bookDTO.setObservation(this.observation);
-//        bookDTO.setCreatedDate(this.createdDate);
-//
-//        return bookDTO;
-//    }
 }

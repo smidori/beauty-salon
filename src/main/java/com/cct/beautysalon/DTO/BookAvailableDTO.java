@@ -16,14 +16,17 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Builder
-public class BookAvailableDTO implements Comparable<BookAvailableDTO>{
+public class BookAvailableDTO implements Comparable<BookAvailableDTO> {
     private LocalDate dateBook;
-
     private LocalTime startTimeBook;
-
     private LocalTime finishTimeBook;
     private Set<BookDetailsDTO> bookDetails;
 
+    /**
+     * override compareto
+     * @param o the object to be compared.
+     * @return
+     */
     @Override
     public int compareTo(BookAvailableDTO o) {
         return o.startTimeBook.compareTo(startTimeBook);

@@ -19,14 +19,18 @@ public class EmailController {
 
     private final EmailService emailService;
 
-
+    /**
+     * Send email when the user forgot the password
+     * @param request
+     * @return
+     */
     @PostMapping("/resetPwd")
     public ResponseEntity<Object> sendEmail(@RequestBody ResetPwdRequest request) {
         try{
             emailService.sendRecoveryEmail(request.getEmail());
             return ResponseEntity.ok().build();
         }catch(NotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
         }catch (Exception e){
             System.out.println(e.getCause());
             System.out.println(e.getMessage());

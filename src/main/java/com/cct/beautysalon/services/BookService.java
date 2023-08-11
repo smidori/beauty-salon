@@ -31,28 +31,55 @@ public class BookService {
     private final ModelMapper mapper;
     private final AvailabilityService availabilityService;
 
-    //convert the entity to DTO
+    /**
+     * convert the entity to DTO
+     *
+     * @param book
+     * @return
+     */
     private BookDTO toDTO(Book book) {
         BookDTO bookDTO = mapper.map(book, BookDTO.class);
         bookDTO.setTreatmentName(book.getTreatment().getName());
         return bookDTO;
     }
 
-    //convert the DTO to entity
+    /**
+     * convert the DTO to entity
+     *
+     * @param bookDTO
+     * @return
+     */
     private Book toEntity(BookDTO bookDTO) {
         Book book = mapper.map(bookDTO, Book.class);
         return book;
     }
 
+    /**
+     * find all books
+     *
+     * @return
+     */
     public Iterable<Book> findAll() {
         Sort sort = Sort.by("dateBook", "workerUser.id", "startTimeBook").ascending();
         return bookRepository.findAll(sort);
     }
 
+    /**
+     * find book by id
+     *
+     * @param id
+     * @return
+     */
     public Book findBookById(Long id) {
         return findOrThrowBookById(id);
     }
 
+    /**
+     * save book
+     *
+     * @param bookDTO
+     * @return
+     */
     public BookDTO save(BookDTO bookDTO) {
         Book book = toEntity(bookDTO);
 
@@ -63,7 +90,6 @@ public class BookService {
             book.setClientUser(userLogged);
         }
         book.setCreatedDate(LocalDateTime.now());
-        //return bookRepository.save(book);
 
         //check if there is any conflict
         List<Book> conflictBook = this.findConflictBook(book);
@@ -71,27 +97,50 @@ public class BookService {
             System.out.println(" conflicts size = " + conflictBook.size());
             System.out.println("id = " + conflictBook.get(0).getId());
             throw new BookingNotAvailableException();
-            //Sorry,this booking isn't available anymore, please choose another day, time and or professional
         }
 
         return toDTO(bookRepository.save(book));
     }
 
+    /**
+     * find conflicts with bookings
+     *
+     * @param book
+     * @return
+     */
     public List<Book> findConflictBook(Book book) {
         System.out.println("findConflictBook **************************");
         return bookRepository.findConflictBook(book.getWorkerUser().getId(), book.getDateBook(), book.getStartTimeBook(), book.getFinishTimeBook());
     }
 
+    /**
+     * delete
+     *
+     * @param id
+     */
     public void delete(Long id) {
         findOrThrowBookById(id);
         bookRepository.deleteById(id);
     }
 
+    /**
+     * update book
+     *
+     * @param id
+     * @param bookDTO
+     */
     public void update(Long id, BookDTO bookDTO) {
         Book book = toEntity(bookDTO);
         this.updateStatusDescription(id, bookDTO.getStatus(), bookDTO.getObservation());
     }
 
+    /**
+     * update status and description
+     *
+     * @param id
+     * @param status
+     * @param observation
+     */
     public void updateStatusDescription(Long id, BookStatus status, String observation) {
 
         findOrThrowBookById(id);
@@ -110,33 +159,57 @@ public class BookService {
         bookRepository.save(book);
     }
 
-
-//
-//    public void update(Long id, Book book) {
-//        findOrThrowBookById(id);
-//        bookRepository.save(book);
-//    }
-
+    /**
+     * find or throw exception
+     *
+     * @param id
+     * @return
+     */
     private Book findOrThrowBookById(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(
                         () -> new NotFoundException("Book by id: " + id + "was not found"));
     }
 
+    /**
+     * find By WorkerUserId And DateBook
+     *
+     * @param workerUserId
+     * @param dateBook
+     * @return
+     */
     public List<Book> findByWorkerUserIdAndDateBook(Long workerUserId, LocalDate dateBook) {
         return bookRepository.findByWorkerUserIdAndDateBook(workerUserId, dateBook);
     }
 
+    /**
+     * find By WorkerUserId
+     *
+     * @param workerUserId
+     * @return
+     */
     public List<Book> findByWorkerUserId(Long workerUserId) {
         Sort sort = Sort.by("dateBook", "startTimeBook").ascending();
         return bookRepository.findByWorkerUserId(workerUserId, sort);
     }
 
+    /**
+     * find By ClientUserId
+     *
+     * @param clientUserId
+     * @return
+     */
     public List<Book> findByClientUserId(Long clientUserId) {
         Sort sort = Sort.by("dateBook", "startTimeBook").ascending();
         return bookRepository.findByClientUserId(clientUserId, sort);
     }
 
+    /**
+     * find By ClientUserId And Status And DateBook
+     *
+     * @param clientUserId
+     * @return
+     */
     public List<BookDTO> findByClientUserIdAndStatusAndDateBook(Long clientUserId) {
         List<Book> books = new ArrayList<>();
         books.addAll(bookRepository.findByClientUserIdAndStatusAndDateBook(clientUserId, BookStatus.COMPLETED, LocalDate.now()));
@@ -145,7 +218,12 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * get Book Available
+     *
+     * @param bookSearchParams
+     * @return
+     */
     public Map<String, BookAvailableDTO> getBookAvailable(BookSearchParamsDTO bookSearchParams) {
         LocalDate dateBook = bookSearchParams.getDateBook();
         long idTreatment = bookSearchParams.getTreatment().getId();
@@ -250,6 +328,13 @@ public class BookService {
         return bookAvailable;
     }
 
+    /**
+     * is after or equal to
+     *
+     * @param dateA
+     * @param dateB
+     * @return
+     */
     private boolean isAfterOrEqual(LocalDateTime dateA, LocalDateTime dateB) {
         if (dateA.isAfter(dateB) || dateA.isEqual(dateB)) {
             return true;
@@ -257,6 +342,13 @@ public class BookService {
         return false;
     }
 
+    /**
+     * is Before Or Equal
+     *
+     * @param dateA
+     * @param dateB
+     * @return
+     */
     private boolean isBeforeOrEqual(LocalDateTime dateA, LocalDateTime dateB) {
         if (dateA.isBefore(dateB) || dateA.isEqual(dateB)) {
             return true;
@@ -264,7 +356,12 @@ public class BookService {
         return false;
     }
 
-
+    /**
+     * find All WithFilters
+     *
+     * @param filter
+     * @return
+     */
     public List<BookDTO> findAllWithFilters(BookFilterParamsDTO filter) {
 
         User userLogged = userLoggedService.getUserLogged();

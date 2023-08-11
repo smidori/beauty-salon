@@ -30,18 +30,42 @@ public class InvoiceService {
     private final UserLoggedService userLoggedService;
     private final ModelMapper mapper;
 
+    /**
+     * convert to toSummaryDTO
+     *
+     * @param invoice
+     * @return
+     */
     private InvoiceSummaryDTO toSummaryDTO(Invoice invoice) {
         return mapper.map(invoice, InvoiceSummaryDTO.class);
     }
 
+    /**
+     * convert to InvoiceDTO
+     *
+     * @param invoice
+     * @return
+     */
     private InvoiceDTO toDTO(Invoice invoice) {
         return mapper.map(invoice, InvoiceDTO.class);
     }
 
+    /**
+     * convert to Invoice
+     *
+     * @param invoiceDTO
+     * @return
+     */
     private Invoice toEntity(InvoiceSummaryDTO invoiceDTO) {
         return mapper.map(invoiceDTO, Invoice.class);
     }
 
+    /**
+     * convert to Invoice
+     *
+     * @param invoiceDTO
+     * @return
+     */
     private Invoice toEntity(InvoiceDTO invoiceDTO) {
         Invoice invoice = InvoiceDTO.toEntity(invoiceDTO);
         invoice.setInvoiceItems(new HashSet<>());
@@ -55,17 +79,28 @@ public class InvoiceService {
         return invoice;
     }
 
+    /**
+     * find all
+     *
+     * @return
+     */
     public Iterable<Invoice> findAll() {
         Sort sort = Sort.by("date").ascending().and(Sort.by("client.firstName").ascending()).and(Sort.by("client.lastName").ascending());
         return invoiceRepository.findAll();
     }
 
+    /**
+     * find All With Filters
+     *
+     * @param filter
+     * @return
+     */
     public List<InvoiceSummaryDTO> findAllWithFilters(InvoiceFilterParamsDTO filter) {
 
         User userLogged = userLoggedService.getUserLogged();
         List<Invoice> invoices = new ArrayList<>();
 
-        if(userLogged.getRole().equals(Role.CLIENT)){
+        if (userLogged.getRole().equals(Role.CLIENT)) {
             filter.setClientId(userLogged.getId());
         }
 
@@ -82,21 +117,44 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * find All By CLientId
+     *
+     * @param clientId
+     * @return
+     */
     public List<Invoice> findAllByCLientId(Long clientId) {
         return invoiceRepository.findAllByCLientId(clientId);
     }
 
+    /**
+     * find Invoice By Id
+     *
+     * @param id
+     * @return
+     */
     public Invoice findInvoiceById(Long id) {
         return invoiceRepository.findById(id)
                 .orElseThrow(
-                        () -> new NotFoundException("Invoice by id "+ id+" not found"));
+                        () -> new NotFoundException("Invoice by id " + id + " not found"));
     }
 
+    /**
+     * findInvoice By Id With InvoiceItems
+     *
+     * @param id
+     * @return
+     */
     public InvoiceDTO findInvoiceByIdWithInvoiceItems(Long id) {
         return toDTO(invoiceRepository.findInvoiceByIdWithInvoiceItems(id));
     }
 
+    /**
+     * save Invoice
+     *
+     * @param invoiceDTO
+     * @return
+     */
     public InvoiceSummaryDTO save(InvoiceDTO invoiceDTO) {
         Invoice invoice = toEntity(invoiceDTO);
         invoice.setCreatedDate(LocalDateTime.now());
@@ -115,7 +173,7 @@ public class InvoiceService {
         inv.getInvoiceItems().stream().filter(invoiceItem ->
                         invoiceItem.getItem() instanceof Product)
                 .forEach(invoiceItem -> {
-                    Product product = productService.findProductById(invoiceItem.getItem().getId());
+                    ProductDTO product = productService.findProductById(invoiceItem.getItem().getId());
                     product.setStock(product.getStock() - invoiceItem.getAmount());
                     productService.update(product.getId(), product);
                 });
@@ -127,25 +185,38 @@ public class InvoiceService {
                     Book book = invoiceItem.getBook();
                     bookService.updateStatusDescription(book.getId(), BookStatus.BILLED, book.getObservation());
 
-                    //book.setStatus(BookStatus.BILLED);
-                    //book.setInServiceDate(LocalDateTime.now());
-                    //bookService.update(book.getId(), book);
                 });
         return toSummaryDTO(invoiceSaved);
-
-        //return invoiceRepository.save(invoice);
     }
+
+    /**
+     * update
+     *
+     * @param id
+     * @param invoice
+     */
     public void update(Long id, Invoice invoice) {
         findOrThrowInvoiceById(id);
         invoiceRepository.save(invoice);
     }
 
+    /**
+     * find Or Throw exception
+     *
+     * @param id
+     * @return
+     */
     private Invoice findOrThrowInvoiceById(Long id) {
         return invoiceRepository.findById(id)
                 .orElseThrow(
                         () -> new NotFoundException("Invoice by id: " + id + "was not found"));
     }
 
+    /**
+     * delete
+     *
+     * @param id
+     */
     public void delete(Long id) {
         findOrThrowInvoiceById(id);
         invoiceRepository.deleteById(id);

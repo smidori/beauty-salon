@@ -20,6 +20,11 @@ public class UserSummaryDTO {
     private Role role;
     private String mobilePhone;
 
+    /**
+     * Convert to entity
+     * @param dto
+     * @return
+     */
     public static User toEntity(UserSummaryDTO dto){
         if(dto == null)
             return null;

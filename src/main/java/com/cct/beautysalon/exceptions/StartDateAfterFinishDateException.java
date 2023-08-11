@@ -1,7 +1,7 @@
 package com.cct.beautysalon.exceptions;
 
 public class StartDateAfterFinishDateException extends RuntimeException {
-
+    //constructors
     public StartDateAfterFinishDateException() {
         super("Finish Date must be greater than or equal to Start Date");
     }

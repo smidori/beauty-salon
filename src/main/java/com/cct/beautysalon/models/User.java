@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(name="user")
 public class User implements UserDetails {
 
-
+	//construct
 	public User(String firstName, String lastName, String login, String password, String email, Role role, String gender, String mobilePhone) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -53,7 +53,7 @@ public class User implements UserDetails {
 	@NotNull(message = "Password is required")
 	private String password;
 
-	@Column(length = 100, nullable = false)
+	@Column(length = 100, nullable = false, unique = true)
 	private String email;
 
 	@Enumerated(EnumType.STRING) // save the string value
@@ -65,10 +65,6 @@ public class User implements UserDetails {
 	private String mobilePhone;
 
 	private String homePhone;
-
-	//não testado ainda
-//	@OneToMany(mappedBy = "client")
-//	private Set<Invoice> invoices;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

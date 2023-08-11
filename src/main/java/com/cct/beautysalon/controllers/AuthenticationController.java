@@ -1,10 +1,7 @@
 package com.cct.beautysalon.controllers;
 
 import com.cct.beautysalon.DTO.UserDTO;
-import com.cct.beautysalon.exceptions.AuthenticationException;
-import com.cct.beautysalon.exceptions.BadCredentialsException;
-import com.cct.beautysalon.exceptions.InvalidUsernameException;
-import com.cct.beautysalon.exceptions.UsernameRegisteredException;
+import com.cct.beautysalon.exceptions.*;
 import com.cct.beautysalon.models.User;
 import com.cct.beautysalon.models.jwt.JwtAuthenticationResponse;
 import com.cct.beautysalon.models.jwt.SigninRequest;
@@ -33,6 +30,7 @@ public class AuthenticationController {
 
     /**
      * This api is used to register the client
+     *
      * @param userDTO
      * @return
      */
@@ -42,13 +40,16 @@ public class AuthenticationController {
         try {
             var response = authenticationService.register(toEntity(userDTO));
             return ResponseEntity.ok(response);
-        }catch (UsernameRegisteredException e) {
+        } catch (UsernameRegisteredException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new JwtAuthenticationResponse(null, null, e.getMessage()));
+        } catch (EmailAlreadyRegisteredException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new JwtAuthenticationResponse(null, null, e.getMessage()));
         }
     }
 
     /**
      * Endpoint for authenticating
+     *
      * @param request
      * @return
      */
@@ -57,7 +58,7 @@ public class AuthenticationController {
         try {
             var response = authenticationService.login(request);
             return ResponseEntity.ok(response);
-        } catch (InvalidUsernameException | BadCredentialsException e ) {
+        } catch (InvalidUsernameException | BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JwtAuthenticationResponse(null, null, e.getMessage()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new JwtAuthenticationResponse(null, null, e.getMessage()));

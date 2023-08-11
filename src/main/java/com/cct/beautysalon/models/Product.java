@@ -19,6 +19,7 @@ import java.util.Set;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "item_type", visible = true)
 public class Product extends Item{
     private int stock;
+    //constructors
     public Product(String name, String description, double price, int stock) {
         this.name = name;
         this.description = description;

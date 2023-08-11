@@ -24,6 +24,11 @@ public class EmailService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
+    /**
+     * send Recovery Email
+     * @param email
+     * @throws Exception
+     */
     public void sendRecoveryEmail(String email) throws Exception {
         try{
         User user = userService.findByEmail(email);

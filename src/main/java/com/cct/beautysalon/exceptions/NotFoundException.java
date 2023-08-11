@@ -1,6 +1,7 @@
 package com.cct.beautysalon.exceptions;
 
 public class NotFoundException extends RuntimeException {
+    //constructors
     public NotFoundException() { super("Register not found."); }
     public NotFoundException(String message) {
         super(message);

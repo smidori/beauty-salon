@@ -17,7 +17,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.util.HashMap;
 
-
+/**
+ * code extract from https://github.com/MajidLamghari/Spring-boot-security-jwt/blob/master/src/main/java/io/javabrains/springsecurityjwt/util/jwtUtil.java
+ */
 @Service
 public class JwtService {
     @Value("${token.signing.key}")

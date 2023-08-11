@@ -66,6 +66,7 @@ public class Book {
 
     private String observation;
 
+    //constructor
     public Book(@NotNull Treatment treatment, @NotNull LocalDate dateBook, @NotNull LocalTime startTimeBook, @NotNull LocalTime finishTimeBook, @NotNull User clientUser, @NotNull User workerUser, @NotNull LocalDateTime createdDate, BookStatus status, String observation) {
         this.treatment = treatment;
         this.dateBook = dateBook;

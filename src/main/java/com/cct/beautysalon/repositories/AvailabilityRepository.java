@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface AvailabilityRepository extends JpaRepository<Availability,Long>{
 
-    //@Query("SELECT a FROM Availability a JOIN FETCH a.treatments")
     @Query("SELECT DISTINCT a FROM Availability a JOIN FETCH a.treatments ORDER BY a.user.firstName ASC," +
             "a.user.lastName ASC, a.startDate ASC, a.hourStartTime ASC")
     List<Availability> findAllWithTreatments();
@@ -23,7 +22,6 @@ public interface AvailabilityRepository extends JpaRepository<Availability,Long>
             + "and ( "
                 + "( "
                 + "(a.startDate <= :startDate and a.finishDate >= :startDate) "
-                //+ "or (a.startDate <= :startDate and a.finishDate is null) "
                 + " or (a.startDate <= :finishDate and a.finishDate >= :startDate) "
             + "or a.startDate = :startDate or a.startDate = :finishDate "
             + "or a.finishDate = :startDate or a.finishDate = :finishDate "
@@ -37,8 +35,6 @@ public interface AvailabilityRepository extends JpaRepository<Availability,Long>
             + "or ( :hourFinishTime >= a.hourStartTime and  :hourFinishTime < a.hourFinishTime) "
             + " ) "
             + " )"
-
-                //+ "or a.finishDate is null "
             + ") "
     )
     List<Availability> findConflicting(long userId, LocalDate startDate, LocalDate finishDate, Time hourStartTime, Time hourFinishTime);

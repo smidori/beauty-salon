@@ -20,14 +20,31 @@ public class TreatmentTypeService {
     private final TreatmentTypeRepository treatmentTypeRepository;
     private final ModelMapper mapper;
 
+    /**
+     * convert to toDTO
+     *
+     * @param treatmentType
+     * @return
+     */
     private TreatmentTypeDTO toDTO(TreatmentType treatmentType) {
         return mapper.map(treatmentType, TreatmentTypeDTO.class);
     }
 
+    /**
+     * convert to entity
+     *
+     * @param treatmentTypeDTO
+     * @return
+     */
     private TreatmentType toEntity(TreatmentTypeDTO treatmentTypeDTO) {
         return mapper.map(treatmentTypeDTO, TreatmentType.class);
     }
 
+    /**
+     * find all treatment types
+     *
+     * @return
+     */
     public List<TreatmentTypeDTO> findAll() {
         Sort sort = Sort.by("name").ascending();
         var treatmentTypes = StreamSupport.stream(treatmentTypeRepository.findAll(sort).spliterator(), false)
@@ -35,25 +52,47 @@ public class TreatmentTypeService {
         return treatmentTypes.stream().map(this::toDTO).toList();
     }
 
+    /**
+     * find by id
+     *
+     * @param id
+     * @return
+     */
     public TreatmentTypeDTO findTreatmentTypeById(Long id) {
         var treatment = treatmentTypeRepository.findById(id)
                 .orElseThrow(
-                        () -> new NotFoundException("Treatment Type by id "+ id+" not found"));
+                        () -> new NotFoundException("Treatment Type by id " + id + " not found"));
         return toDTO(treatment);
     }
 
+    /**
+     * save
+     *
+     * @param treatmentTypeDTO
+     * @return
+     */
     public TreatmentTypeDTO save(TreatmentTypeDTO treatmentTypeDTO) {
         TreatmentType treatmentType = toEntity(treatmentTypeDTO);
         return toDTO(treatmentTypeRepository.save(treatmentType));
     }
 
-
+    /**
+     * update
+     *
+     * @param id
+     * @param treatmentTypeDTO
+     */
     public void update(Long id, TreatmentTypeDTO treatmentTypeDTO) {
         findTreatmentTypeById(id);
         TreatmentType treatmentType = toEntity(treatmentTypeDTO);
         treatmentTypeRepository.save(treatmentType);
     }
 
+    /**
+     * delete treatment
+     *
+     * @param id
+     */
     public void delete(Long id) {
         findTreatmentTypeById(id);
         treatmentTypeRepository.deleteById(id);

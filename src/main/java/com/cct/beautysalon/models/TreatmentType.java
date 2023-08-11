@@ -15,9 +15,9 @@ public class TreatmentType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
 
+    //constructor
     public TreatmentType(String name) {
         this.name = name;
     }

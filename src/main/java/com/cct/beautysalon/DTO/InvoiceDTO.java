@@ -39,6 +39,11 @@ public class InvoiceDTO {
         return Objects.hash(id, client, observation, total, date);
     }
 
+    /**
+     * convert to entity
+     * @param dto
+     * @return
+     */
     public static Invoice toEntity(InvoiceDTO dto){
         if(dto == null)
             return null;
