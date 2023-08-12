@@ -220,6 +220,9 @@ public class BookService {
 
     /**
      * get Book Available
+     * Its check every availability for that user and create the slots from the start every x minutes (treatment duration)
+     * and check if there is any book that conflict with that time, the first conflict that is found, it will get the time finished of
+     * this booking and calculate the slots from every x minuts from the time that this book is finished
      *
      * @param bookSearchParams
      * @return
@@ -238,10 +241,10 @@ public class BookService {
 
             LocalDateTime endDateTimeShift = LocalDateTime.of(dateBook, a.getHourFinishTime().toLocalTime());
 
-            //check from here to down
+            //get the list of books this user has
             List<Book> books = this.findByWorkerUserIdAndDateBook(a.getUser().getId(), dateBook);
 
-            while (startDateTimeShift.isBefore(endDateTimeShift)) {
+            while (startDateTimeShift.isBefore(endDateTimeShift)) { //while is a valid shift
                 LocalDateTime startSlotTime = startDateTimeShift;
                 LocalDateTime endSlotTime = startSlotTime.plusMinutes(duration);
 
@@ -302,7 +305,7 @@ public class BookService {
                         );
 
                         Set<BookDetailsDTO> bookDetailsDTOS = new TreeSet<>(Comparator.comparing(BookDetailsDTO::getUserId));
-                        //System.out.println("bookAvailableDTO.getBookDetails() =====> " + bookAvailableDTO.getBookDetails());
+
                         if (bookAvailableDTO.getBookDetails() != null) {
                             bookDetailsDTOS.addAll(bookAvailableDTO.getBookDetails());
                         }
@@ -314,6 +317,7 @@ public class BookService {
                                 .finishTimeBook(endSlotTime.toLocalTime())
                                 .userId(a.getUser().getId())
                                 .userName(a.getUser().getFirstName() + " " + a.getUser().getLastName())
+
                                 .build();
 
                         bookDetailsDTOS.add(slot);

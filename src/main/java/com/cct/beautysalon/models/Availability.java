@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.internal.bytebuddy.build.HashCodeAndEqualsPlugin;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class Availability{
             joinColumns = @JoinColumn(name = "availability_id"),
             inverseJoinColumns = @JoinColumn(name = "treatment_id")
     )
+
     @Column(nullable = false)
     private Set<Treatment> treatments;
 

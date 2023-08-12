@@ -108,7 +108,7 @@ public class AvailabilityService {
     }
 
     /**
-     * validate period availability
+     * validate period availability if there is a conflict with another about the date and time
      *
      * @param dto
      */
@@ -117,26 +117,23 @@ public class AvailabilityService {
         //check if there is conflicting with another availability for this user
         List<Availability> conflicting = availabilityRepository.findConflicting(dto.getUser().getId(), dto.getStartDate(), dto.getFinishDate(), dto.getHourStartTime(), dto.getHourFinishTime());
         if (conflicting.size() == 0) {
-            System.out.println("conflict size is 0");
-            return;
+             return;
         } else if (conflicting.size() == 1) {
-            System.out.println("conflict size is 1");
-            Availability availBD = conflicting.get(0);
+             Availability availBD = conflicting.get(0);
             if (dto.getId() != null && dto.getId().equals(availBD.getId())) {
                 //do nothing
             } else if (availBD.getStartDate().isAfter(dto.getFinishDate())) {
-                System.out.println("start date saved is after finish date new/update");
-                return;
+                 return;
             } else if (availBD.getStartDate().isBefore(dto.getFinishDate()) &&
                     (availBD.getStartDate().isAfter(dto.getStartDate()) ||
                             availBD.getStartDate().isEqual(dto.getStartDate())
                     )) {
-                throw new AvailabilityConflictException("Conflict with id = x " + availBD.getId());
+                throw new AvailabilityConflictException("Conflict with id = " + availBD.getId());
             } else if ((availBD.getStartDate().isBefore(dto.getStartDate())
                     || (availBD.getStartDate().isEqual(dto.getStartDate())) &&
                     (availBD.getFinishDate().isAfter(dto.getStartDate()))
             )) {
-                throw new AvailabilityConflictException("Conflict with id = y " + availBD.getId());
+                throw new AvailabilityConflictException("Conflict with id = " + availBD.getId());
             } else if (dto.getStartDate().isAfter(availBD.getStartDate())) {
                 LocalDate supposedFinishDate = dto.getFinishDate().plusDays(-1);
                 System.out.println("new finish date is " + supposedFinishDate);

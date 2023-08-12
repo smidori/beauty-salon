@@ -54,9 +54,10 @@ public class LoadDatabase {
                 userRepository.save(new User("Jamie", "MacQuillan", "jam", encoderPWD, "sms.testcct@gmail.com", Role.WORKER, "male", "+353(82)1231212"));
                 userRepository.save(new User("Zoe", "Broderick", "zoe", encoderPWD, "sms.test.cct@gmail.com", Role.WORKER, "female", "+353(85)1231213"));
                 userRepository.save(new User("Patrick", "Sullivan", "pat", encoderPWD, "smstest.cct@gmail.com", Role.WORKER, "male", "+353(87)1231214"));
-                userRepository.save(new User("Penelope", "Morrison", "pen", encoderPWD, "sm.stestcct@gmail.com", Role.WORKER, "female", "+353(88)1231215"));
-                userRepository.save(new User("Catarine", "Morrison", "cat", encoderPWD, "smste.st.cct@gmail.com", Role.CLIENT, "female", "+353(88)1231112"));
-                userRepository.save(new User("John", "Willis", "john", encoderPWD, "s.mstestcct@gmail.com", Role.CLIENT, "male", "+353(88)1231115"));
+//userRepository.save(new User("Penelope", "Morrison", "pen", encoderPWD, "sm.stestcct@gmail.com", Role.WORKER, "female", "+353(88)1231215"));
+                userRepository.save(new User("Catarine", "Murray", "cat", encoderPWD, "smste.st.cct@gmail.com", Role.CLIENT, "female", "+353(88)1231112"));
+                userRepository.save(new User("Connor", "Willis", "con", encoderPWD, "s.mstestcct@gmail.com", Role.CLIENT, "male", "+353(88)1231115"));
+                userRepository.save(new User("Celeste", "Murphy", "cel", encoderPWD, "sm.ste.st.cct@gmail.com", Role.CLIENT, "female", "+353(89)1931512"));
 
                 User userWorker2 = userRepository.findById(2L).get();
                 User userWorker3 = userRepository.findById(3L).get();
@@ -79,18 +80,18 @@ public class LoadDatabase {
                 TreatmentType waxing = treatmentTypeRepository.findById(5L).get();
 
                 LOG.info("Add treatments to database");
-                treatmentRepository.save(new Treatment("Kids haircut - 2y", "Until 2 years old", nails, 30, 60));
-                treatmentRepository.save(new Treatment("Kids haircut - 3y", "older than 2 years old", nails, 25, 30));
-                treatmentRepository.save(new Treatment("Classic Manicure/Pedicure", "Nail art (+5) shellac increase more (+15)", ladiesTreats, 20, 40));
-                treatmentRepository.save(new Treatment("Luxury Manicure/Pedicure", "Nail art (+5) shellac increase more (+15)", ladiesTreats, 25, 60));
-                treatmentRepository.save(new Treatment("Short haircut", "shampoo-blow-dry", ladiesTreats, 50, 45));
-                treatmentRepository.save(new Treatment("Long haircut", "shampoo-blow-dry", ladiesTreats, 55, 60));
-                treatmentRepository.save(new Treatment("Haircut", "shampoo-blow-dry", maleTreats, 25, 30));
+                treatmentRepository.save(new Treatment("Kids haircut until 2y", "Until 2 years old", nails, 30, 60));
+//treatmentRepository.save(new Treatment("Kids haircut older than 3y", "older than 2 years old", nails, 25, 30));
+                treatmentRepository.save(new Treatment("Manicure/Pedicure", "Nail art (+5) shellac increase more (+15)", ladiesTreats, 20, 45));
+                //treatmentRepository.save(new Treatment("Luxury Manicure/Pedicure", "Nail art (+5) shellac increase more (+15)", ladiesTreats, 25, 60));
+                treatmentRepository.save(new Treatment("Haircut - short hair", "shampoo-blow-dry", ladiesTreats, 50, 45));
+                treatmentRepository.save(new Treatment("Haircut - long hair", "shampoo-blow-dry", ladiesTreats, 55, 60));
+//treatmentRepository.save(new Treatment("Haircut", "Dry haircut", maleTreats, 25, 30));
                 treatmentRepository.save(new Treatment("Beard", "beard service", maleTreats, 15, 20));
-                treatmentRepository.save(new Treatment("Oil massage", "Hot Oil Back & Neck Massage", massage, 50, 60));
-                treatmentRepository.save(new Treatment("Back & shoulder massage", "To relieve stress and muscles aches on the back, shoulder and neck", massage, 30, 30));
-                treatmentRepository.save(new Treatment("Full leg", "waxing full leg", waxing, 35, 90));
-                treatmentRepository.save(new Treatment("Half leg", "waxing half leg (Upper or Lower)", waxing, 25, 60));
+                treatmentRepository.save(new Treatment("Massage full body", "Hot Oil Back & Neck Massage", massage, 50, 60));
+//treatmentRepository.save(new Treatment("Massage Back & shoulder", "To relieve stress and muscles aches on the back, shoulder and neck", massage, 30, 30));
+                treatmentRepository.save(new Treatment("Wax full leg", "waxing full leg", waxing, 35, 90));
+//treatmentRepository.save(new Treatment("Wax half leg", "waxing half leg (Upper or Lower)", waxing, 25, 60));
 
 //            Treatment treatment1 = treatmentRepository.findById(1L).get();
 //            Treatment treatment2 = treatmentRepository.findById(2L).get();
