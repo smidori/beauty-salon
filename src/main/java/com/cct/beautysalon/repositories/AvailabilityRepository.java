@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AvailabilityRepository extends JpaRepository<Availability,Long>{
 
-    @Query("SELECT DISTINCT a FROM Availability a JOIN FETCH a.treatments t ORDER BY a.user.firstName ASC," +
+    @Query("SELECT  a FROM Availability a JOIN FETCH a.treatments t ORDER BY a.user.firstName ASC," +
             "a.user.lastName ASC, a.startDate ASC, a.hourStartTime, t.name ASC")
     List<Availability> findAllWithTreatments();
 
